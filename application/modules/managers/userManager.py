@@ -16,7 +16,6 @@ class UserManager(BaseManager):
         self.mediator.set(self.TRIGGERS['LOGIN'], self.login)
         self.mediator.set(self.TRIGGERS['LOGOUT'], self.logout)
         self.mediator.set(self.TRIGGERS['REGISTER'], self.register)
-        print(self.login({'login': "vasya", "password": "55c7ddd598cd9b33944ad7092f35d49a", "rnd": 32}))
 
     # Метод, проверяющий данные на валидность
     @staticmethod
@@ -69,9 +68,9 @@ class UserManager(BaseManager):
     def logout(self, data):
         if self.__checkData("logout", data):
             token = data['token']
-            userId = self.db.getUserIdByToken(token)['id']
-            if userId > 0:
-                self.db.setToken(userId, None)
+            userId = self.db.getUserIdByToken(token)
+            if userId:
+                self.db.setToken(userId['id'], None)
                 del self.users[token]
                 return True
         return False

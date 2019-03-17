@@ -36,7 +36,11 @@ class Router:
         return self.web.json_response(self.api.error(2010))
 
     def logout(self, request):
-        return
+        token = request.match_info.get('token')
+        answer = self.mediator.get(self.TRIGGERS['LOGOUT'], { 'token': token })
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(2010))
 
     def register(self, request):
         return
