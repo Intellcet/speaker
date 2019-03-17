@@ -13,7 +13,10 @@ class Router:
         self.TYPES = mediator.getEvents()
         self.TRIGGERS = mediator.getTriggers()
         routes = [
-            ('*', '/', self.staticHandler)
+            ('*', '/', self.staticHandler),
+            ('GET', '/api/user/login/{login}/{password}/{rnd}', self.login),
+            ('GET', '/api/user/logout/{token}', self.logout),
+            ('POST', '/api/user', self.register)
         ]
         app.router.add_static('/css/', path=str('./public/css/'))
         app.router.add_static('/js/', path=str('./public/js/'))
@@ -22,3 +25,18 @@ class Router:
 
     def staticHandler(self, request):
         return self.web.FileResponse('./public/index.html')
+
+    def login(self, request):
+        login = request.match_info.get('login')
+        password = request.match_info.get('password')
+        rnd = request.match_info.get('rnd')
+        answer = self.mediator.get(self.TRIGGERS['LOGIN'], { 'login': login, 'password': password, 'rnd': rnd })
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(2010))
+
+    def logout(self, request):
+        return
+
+    def register(self, request):
+        return
