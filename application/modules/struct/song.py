@@ -5,10 +5,10 @@ class Song:
     url = None
 
     def __init__(self, options):
-        id = options['id']
-        userId = options['id']
-        name = options['name']
-        url = options['url']
+        self.id = options['id']
+        self.userId = options['userId']
+        self.name = options['name']
+        self.url = options['url']
 
     def __str__(self):
         return "{ id: " + str(self.id) + ", userId: " + str(self.userId) + \

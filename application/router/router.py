@@ -13,7 +13,11 @@ class Router:
         self.TYPES = mediator.getEvents()
         self.TRIGGERS = mediator.getTriggers()
         routes = [
-            ('*', '/', self.staticHandler)
+            ('*', '/', self.staticHandler),
+            # методы апи о юзерах
+            ('GET', '/api/user/login/{login}/{password}/{rnd}', self.login),
+            ('GET', '/api/user/logout/{token}', self.logout),
+            ('POST', '/api/user', self.register)
         ]
         app.router.add_static('/css/', path=str('./public/css/'))
         app.router.add_static('/js/', path=str('./public/js/'))
@@ -22,3 +26,28 @@ class Router:
 
     def staticHandler(self, request):
         return self.web.FileResponse('./public/index.html')
+
+    def login(self, request):
+        login = request.match_info.get('login')
+        password = request.match_info.get('password')
+        rnd = request.match_info.get('rnd')
+        answer = self.mediator.get(self.TRIGGERS['LOGIN'], { 'login': login, 'password': password, 'rnd': rnd })
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(2010))
+
+    def logout(self, request):
+        token = request.match_info.get('token')
+        answer = self.mediator.get(self.TRIGGERS['LOGOUT'], { 'token': token })
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(2010))
+
+    async def register(self, request):
+        data = await request.json()
+        # login = request.match_info.get('login')
+        # password = request.match_info.get('password')
+        answer = self.mediator.get(self.TRIGGERS['REGISTER'], { 'login': data['login'], 'password': data['password'] })
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(2020))

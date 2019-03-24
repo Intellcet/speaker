@@ -16,4 +16,4 @@ class Playlist:
                ", name " + self.name + ", songs: " + str(self.songs) + " }"
 
     def get(self):
-        return {'id': self.id, 'userId': self.userId, 'name': self.name, 'songs': self.songs}
+        return { 'id': self.id, 'userId': self.userId, 'name': self.name, 'songs': self.songs }
