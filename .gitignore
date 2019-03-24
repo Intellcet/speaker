@@ -148,4 +148,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-/public/music/*/
+!public/css/*
+!public/js/*
+!public/music/*
+public/music/*/
