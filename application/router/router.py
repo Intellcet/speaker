@@ -19,9 +19,18 @@ class Router:
             ('GET', '/api/user/logout/{token}', self.logout),
             ('POST', '/api/user', self.register),
             # методы апи о песнях
-            ('GET', '/api/song/getAll/{token}', self.getAllSongs),
+            ('GET', '/api/song/getAll/{token}', self.getAllSongsByUserId),  # Получить все песни пользователя
             ('POST', '/api/song/{token}', self.uploadSong),
             ('GET', '/api/song/{token}/{songId}', self.downloadSong)
+            # Удалить песню пользователя
+            # Добавить песню в плейлист
+            # Убрать песню из плейлиста
+            # методы апи о плейлистах
+            # Показать плейлисты пользователя
+            # Показать конкретный плейлист
+            # Добавить плейлист
+            # Удалить плейлист
+
         ]
         app.router.add_static('/music/', path=str('./public/music/'))
         app.router.add_static('/css/', path=str('./public/css/'))
@@ -55,7 +64,7 @@ class Router:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(2020))
 
-    def getAllSongs(self):
+    def getAllSongsByUserId(self):
         return
 
     async def uploadSong(self, request):
