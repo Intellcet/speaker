@@ -83,6 +83,6 @@ class UserManager(BaseManager):
             password = data['password']
             result = self.db.register(login, password)
             if result:
-                os.mkdir(self.path + login)
+                os.mkdir(self.path + login)  # Создаем папку для песен нового пользователя
                 return result
         return False

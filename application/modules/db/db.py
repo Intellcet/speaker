@@ -78,3 +78,8 @@ class DB:
         except sqlite3.IntegrityError:
             return False
         return self.getSongByName(url)
+
+    def getSongById(self, songId):
+        query = "SELECT * FROM songs WHERE songs.id = :songId"
+        self.c.execute(query, { 'songId': songId })
+        return self.c.fetchone()

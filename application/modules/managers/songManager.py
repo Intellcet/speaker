@@ -1,4 +1,4 @@
-import os
+import base64
 
 from .baseManager import BaseManager
 from ..struct.song import Song
@@ -11,6 +11,7 @@ class SongManager(BaseManager):
         super().__init__(options)
         self.mediator.set(self.TRIGGERS['GET_USER_SONGS'], self.getUserSongs)
         self.mediator.set(self.TRIGGERS['UPLOAD_SONG'], self.uploadSong)
+        self.mediator.set(self.TRIGGERS['DOWNLOAD_SONG'], self.downloadSong)
 
     # Получить песни пользователя
     # data = { id }
@@ -42,10 +43,26 @@ class SongManager(BaseManager):
                     file = open(filepath, 'wb')
                     file.write(content)
                     file.close()
-                    url = "http://localhost:8080/" + filepath
-                    result = self.db.addSong(user.id, filename, url)
+                    result = self.db.addSong(user.id, filename, filepath)
                     if result:
                         user.songs.append(Song({ 'id': result['id'], 'userId': result['users_id'],
                                                  'name': result['name'], 'url': result['url'] }))
                         return True
+        return False
+
+    # Выгрузка песни на клиент
+    # data = { token, songId }
+    def downloadSong(self, data):
+        token = data['token']
+        songId = data['songId']
+        users = self.mediator.get(self.TRIGGERS['GET_USERS'])
+        if token in users.keys():
+            user = users[token]
+            if user:
+                song = self.db.getSongById(songId)
+                if song:
+                    songUrl = song['url']
+                    with open(songUrl, 'rb') as f:  # открываем файл с песней
+                        data = base64.b64encode(bytearray(f.read()))  # кодируем в бинарник
+                        return data.decode('utf-8')  # декодируем в utf-8
         return False

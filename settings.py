@@ -20,7 +20,8 @@ SETTINGS = {
             "REGISTER": "REGISTER",
             "GET_USER_SONGS": "GET_USER_SONGS",
             "GET_USER_PLAYLISTS": "GET_USER_PLAYLISTS",
-            "UPLOAD_SONG": "UPLOAD_SONG"
+            "UPLOAD_SONG": "UPLOAD_SONG",
+            "DOWNLOAD_SONG": "DOWNLOAD_SONG"
         },
         "EVENTS": {}
     },

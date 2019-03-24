@@ -19,7 +19,9 @@ class Router:
             ('GET', '/api/user/logout/{token}', self.logout),
             ('POST', '/api/user', self.register),
             # методы апи о песнях
-            ('POST', '/api/song/{token}', self.uploadSong)
+            ('GET', '/api/song/getAll/{token}', self.getAllSongs),
+            ('POST', '/api/song/{token}', self.uploadSong),
+            ('GET', '/api/song/{token}/{songId}', self.downloadSong)
         ]
         app.router.add_static('/music/', path=str('./public/music/'))
         app.router.add_static('/css/', path=str('./public/css/'))
@@ -53,9 +55,22 @@ class Router:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(2020))
 
+    def getAllSongs(self):
+        return
+
     async def uploadSong(self, request):
         request._client_max_size = 1024**2 * 15  # 15MB max size
         data = await request.post()
         token = request.match_info.get('token')
         answer = self.mediator.get(self.TRIGGERS['UPLOAD_SONG'], { 'data': data, 'token': token })
-        return self.web.json_response(self.api.answer(answer))
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(3010))
+
+    def downloadSong(self, request):
+        token = request.match_info.get('token')
+        songId = request.match_info.get('songId')
+        answer = self.mediator.get(self.TRIGGERS['DOWNLOAD_SONG'], { 'token': token, 'songId': songId })
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(3020))
