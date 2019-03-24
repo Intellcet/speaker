@@ -12,9 +12,9 @@ from application.modules.managers.userManager import UserManager
 mediator = Mediator(SETTINGS["MEDIATOR"])
 db = DB(SETTINGS["DB"])
 
-SongManager({ "mediator": mediator, "db": db })
-PlaylistManager({ "mediator": mediator, "db": db })
-UserManager({ "mediator": mediator, "db": db, "pathToPlaylists": SETTINGS['PATH_TO_PLAYLISTS'] })
+SongManager({ "mediator": mediator, "db": db, "pathToMusic": SETTINGS['PATH_TO_MUSIC'] })
+PlaylistManager({ "mediator": mediator, "db": db, "pathToMusic": SETTINGS['PATH_TO_MUSIC'] })
+UserManager({ "mediator": mediator, "db": db, "pathToMusic": SETTINGS['PATH_TO_MUSIC'] })
 
 # test users:
 # vasya <=> 123

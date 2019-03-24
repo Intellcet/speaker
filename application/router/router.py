@@ -17,8 +17,11 @@ class Router:
             # методы апи о юзерах
             ('GET', '/api/user/login/{login}/{password}/{rnd}', self.login),
             ('GET', '/api/user/logout/{token}', self.logout),
-            ('POST', '/api/user', self.register)
+            ('POST', '/api/user', self.register),
+            # методы апи о песнях
+            ('POST', '/api/song/{token}', self.uploadSong)
         ]
+        app.router.add_static('/music/', path=str('./public/music/'))
         app.router.add_static('/css/', path=str('./public/css/'))
         app.router.add_static('/js/', path=str('./public/js/'))
         for route in routes:
@@ -45,9 +48,14 @@ class Router:
 
     async def register(self, request):
         data = await request.json()
-        # login = request.match_info.get('login')
-        # password = request.match_info.get('password')
         answer = self.mediator.get(self.TRIGGERS['REGISTER'], { 'login': data['login'], 'password': data['password'] })
         if answer:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(2020))
+
+    async def uploadSong(self, request):
+        request._client_max_size = 1024**2 * 15  # 15MB max size
+        data = await request.post()
+        token = request.match_info.get('token')
+        answer = self.mediator.get(self.TRIGGERS['UPLOAD_SONG'], { 'data': data, 'token': token })
+        return self.web.json_response(self.api.answer(answer))

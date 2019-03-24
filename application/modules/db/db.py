@@ -64,3 +64,17 @@ class DB:
                 "JOIN songs_in_playlists ON (songs_in_playlists.playlists_id=:id AND songs_in_playlists.songs_id=songs.id)"
         self.c.execute(query, {'id': id})
         return self.c.fetchall()
+
+    def getSongByName(self, url):
+        query = "SELECT * FROM songs WHERE url = :url"
+        self.c.execute(query, {'url': url})
+        return self.c.fetchone()
+
+    def addSong(self, userId, name, url):
+        query = "INSERT INTO songs (users_id, name, url) VALUES (:userId, :name, :url)"
+        try:
+            self.c.execute(query, {'userId': userId, 'name': name, 'url': url })
+            self.conn.commit()
+        except sqlite3.IntegrityError:
+            return False
+        return self.getSongByName(url)
