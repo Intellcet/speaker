@@ -1,5 +1,6 @@
 from hashlib import md5
 import random
+import os
 
 from .baseManager import BaseManager
 from ..struct.user import User
@@ -16,6 +17,7 @@ class UserManager(BaseManager):
         self.mediator.set(self.TRIGGERS['LOGIN'], self.login)
         self.mediator.set(self.TRIGGERS['LOGOUT'], self.logout)
         self.mediator.set(self.TRIGGERS['REGISTER'], self.register)
+        self.path = options['pathToPlaylists']
 
     # Метод, проверяющий данные на валидность
     @staticmethod
@@ -81,5 +83,8 @@ class UserManager(BaseManager):
         if self.__checkData("register", data):
             login = data['login']
             password = data['password']
-            return self.db.register(login, password)
+            result = self.db.register(login, password)
+            if result:
+                os.mkdir(self.path + login)
+                return result
         return False

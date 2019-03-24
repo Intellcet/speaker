@@ -17,7 +17,7 @@ class Router:
             # методы апи о юзерах
             ('GET', '/api/user/login/{login}/{password}/{rnd}', self.login),
             ('GET', '/api/user/logout/{token}', self.logout),
-            ('GET', '/api/user/{login}/{password}', self.register)
+            ('POST', '/api/user', self.register)
         ]
         app.router.add_static('/css/', path=str('./public/css/'))
         app.router.add_static('/js/', path=str('./public/js/'))
@@ -44,10 +44,10 @@ class Router:
         return self.web.json_response(self.api.error(2010))
 
     async def register(self, request):
-        #data = await request.json()
-        login = request.match_info.get('login')
-        password = request.match_info.get('password')
-        answer = self.mediator.get(self.TRIGGERS['REGISTER'], { 'login': login, 'password': password })
+        data = await request.json()
+        # login = request.match_info.get('login')
+        # password = request.match_info.get('password')
+        answer = self.mediator.get(self.TRIGGERS['REGISTER'], { 'login': data['login'], 'password': data['password'] })
         if answer:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(2020))

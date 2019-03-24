@@ -21,6 +21,8 @@ SETTINGS = {
             "GET_USER_PLAYLISTS": "GET_USER_PLAYLISTS"
         },
         "EVENTS": {}
-    }
+    },
+
+    "PATH_TO_PLAYLISTS": "public/playlists/"
 
 }

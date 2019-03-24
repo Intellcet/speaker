@@ -14,7 +14,13 @@ db = DB(SETTINGS["DB"])
 
 SongManager({ "mediator": mediator, "db": db })
 PlaylistManager({ "mediator": mediator, "db": db })
-UserManager({ "mediator": mediator, "db": db })
+UserManager({ "mediator": mediator, "db": db, "pathToPlaylists": SETTINGS['PATH_TO_PLAYLISTS'] })
+
+# test users:
+# vasya <=> 123
+# petya <=> 321
+# ivan <=> 213
+# ilya <=> 123
 
 app = web.Application()
 Router(app, web, mediator)
