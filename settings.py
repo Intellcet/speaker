@@ -25,6 +25,9 @@ SETTINGS = {
             "DELETE_SONG": "DELETE_SONG",
             "ADD_SONG_TO_PLAYLIST": "ADD_SONG_TO_PLAYLIST",
             "REMOVE_SONG_FROM_PLAYLIST": "REMOVE_SONG_FROM_PLAYLIST",
+            "GET_PLAYLIST": "GET_PLAYLIST",
+            "ADD_PLAYLIST": "ADD_PLAYLIST",
+            "DELETE_PLAYLIST": "DELETE_PLAYLIST",
         },
         "EVENTS": {}
     },

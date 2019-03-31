@@ -10,6 +10,9 @@ class ApiAnswer:
         3030: 'can not delete this song',
         3040: 'can not add song to playlist',
         3050: 'can not delete song from playlist',
+        4010: 'can not get playlist',
+        4020: 'playlist with this name already exists',
+        4030: 'can not delete this playlist',
         404: 'element not found',
         9000: 'unknown error'
     }
