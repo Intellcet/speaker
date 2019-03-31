@@ -21,7 +21,10 @@ SETTINGS = {
             "GET_USER_SONGS": "GET_USER_SONGS",
             "GET_USER_PLAYLISTS": "GET_USER_PLAYLISTS",
             "UPLOAD_SONG": "UPLOAD_SONG",
-            "DOWNLOAD_SONG": "DOWNLOAD_SONG"
+            "DOWNLOAD_SONG": "DOWNLOAD_SONG",
+            "DELETE_SONG": "DELETE_SONG",
+            "ADD_SONG_TO_PLAYLIST": "ADD_SONG_TO_PLAYLIST",
+            "REMOVE_SONG_FROM_PLAYLIST": "REMOVE_SONG_FROM_PLAYLIST",
         },
         "EVENTS": {}
     },

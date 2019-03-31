@@ -10,7 +10,7 @@ window.onload = () => {
     const url = 'http://localhost:8080/api/';
 
     button.addEventListener("click", async e => {
-        const data = await $.get(`${url}song/${token}/20`);
+        const data = await $.get(`${url}song/${token}/21`);
         audio.src = `data:audio/mp3;base64,${data.data}`;
         audio.play().catch(e => console.log(e));
         setInterval(() => {

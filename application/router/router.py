@@ -21,10 +21,10 @@ class Router:
             # методы апи о песнях
             ('GET', '/api/song/getAll/{token}', self.getAllSongsByUserId),  # Получить все песни пользователя
             ('POST', '/api/song/{token}', self.uploadSong),
-            ('GET', '/api/song/{token}/{songId}', self.downloadSong)
-            # Удалить песню пользователя
-            # Добавить песню в плейлист
-            # Убрать песню из плейлиста
+            ('GET', '/api/song/{token}/{songId}', self.downloadSong),
+            ('DELETE', '/api/song/{token}/{songId}', self.deleteSong),  # Удалить песню пользователя
+            ('GET', '/api/song/playlist/{token}/{songId}/{playlistId}', self.addSongToPlaylist),  # Добавить песню в плейлист
+            ('DELETE', '/api/song/playlist/{token}/{songId}/{playlistId}', self.removeSongFromPlaylist),  # Убрать песню из плейлиста
             # методы апи о плейлистах
             # Показать плейлисты пользователя
             # Показать конкретный плейлист
@@ -83,3 +83,31 @@ class Router:
         if answer:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(3020))
+
+    def deleteSong(self, request):
+        token = request.match_info.get('token')
+        songId = request.match_info.get('songId')
+        answer = self.mediator.get(self.TRIGGERS['DELETE_SONG'], { 'token': token, 'songId': songId })
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(3030))
+
+    def addSongToPlaylist(self, request):
+        token = request.match_info.get('token')
+        songId = request.match_info.get('songId')
+        playlistId = request.match_info.get('playlistId')
+        answer = self.mediator.get(self.TRIGGERS['ADD_SONG_TO_PLAYLIST'],
+                                   {'token': token, 'songId': songId, 'playlistId': playlistId})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(3040))
+
+    def removeSongFromPlaylist(self, request):
+        token = request.match_info.get('token')
+        songId = request.match_info.get('songId')
+        playlistId = request.match_info.get('playlistId')
+        answer = self.mediator.get(self.TRIGGERS['REMOVE_SONG_FROM_PLAYLIST'],
+                                   {'token': token, 'songId': songId, 'playlistId': playlistId})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(3050))
