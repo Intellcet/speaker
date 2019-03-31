@@ -19,17 +19,15 @@ class Router:
             ('GET', '/api/user/logout/{token}', self.logout),
             ('POST', '/api/user', self.register),
             # методы апи о песнях
-            ('GET', '/api/song/getAll/{token}', self.getAllSongsByUserId),  # Получить все песни пользователя
-            ('POST', '/api/song/{token}', self.uploadSong),
-            ('GET', '/api/song/{token}/{songId}', self.downloadSong),
+            ('POST', '/api/song/{token}', self.uploadSong),  # Выгрузить песню
+            ('GET', '/api/song/{token}/{songId}', self.downloadSong),  # Воспроизвести песню
             ('DELETE', '/api/song/{token}/{songId}', self.deleteSong),  # Удалить песню пользователя
             ('GET', '/api/song/playlist/{token}/{songId}/{playlistId}', self.addSongToPlaylist),  # Добавить песню в плейлист
             ('DELETE', '/api/song/playlist/{token}/{songId}/{playlistId}', self.removeSongFromPlaylist),  # Убрать песню из плейлиста
             # методы апи о плейлистах
-            # Показать плейлисты пользователя
-            # Показать конкретный плейлист
-            # Добавить плейлист
-            # Удалить плейлист
+            ('GET', '/api/playlist/{token}/{playlistId}', self.getPlaylist),  # Показать конкретный плейлист
+            ('GET', '/api/playlist/add/{token}/{name}', self.addPlaylist),  # Добавить плейлист
+            ('DELETE', '/api/playlist/{token}/{playlistId}', self.deletePlaylist),  # Удалить плейлист
 
         ]
         app.router.add_static('/music/', path=str('./public/music/'))
@@ -63,9 +61,6 @@ class Router:
         if answer:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(2020))
-
-    def getAllSongsByUserId(self):
-        return
 
     async def uploadSong(self, request):
         request._client_max_size = 1024**2 * 15  # 15MB max size
@@ -111,3 +106,27 @@ class Router:
         if answer:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(3050))
+
+    def getPlaylist(self, request):
+        token = request.match_info.get('token')
+        playlistId = request.match_info.get('playlistId')
+        answer = self.mediator.get(self.TRIGGERS['GET_PLAYLIST'], {'token': token, 'playlistId': playlistId})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(4010))
+
+    def addPlaylist(self, request):
+        token = request.match_info.get('token')
+        name = request.match_info.get('name')
+        answer = self.mediator.get(self.TRIGGERS['ADD_PLAYLIST'], {'token': token, 'name': name})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(4020))
+
+    def deletePlaylist(self, request):
+        token = request.match_info.get('token')
+        playlistId = request.match_info.get('playlistId')
+        answer = self.mediator.get(self.TRIGGERS['DELETE_PLAYLIST'], {'token': token, 'playlistId': playlistId})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(4030))

@@ -112,3 +112,17 @@ class DB:
         self.c.execute(query, {'playlistId': playlistId, 'songId': songId})
         self.conn.commit()
         return True
+
+    def addPlaylist(self, userId, name):
+        query = "INSERT INTO playlists (users_id, name) VALUES (:userId, :name)"
+        self.c.execute(query, {'userId': userId, 'name': name})
+        self.conn.commit()
+        return True
+
+    def deletePlaylist(self, playlistId):
+        query = "DELETE FROM songs_in_playlists WHERE playlists_id = :playlistId"
+        self.c.execute(query, { 'playlistId': playlistId })
+        query = "DELETE FROM playlists WHERE id = :playlistId"
+        self.c.execute(query, {'playlistId': playlistId})
+        self.conn.commit()
+        return True
