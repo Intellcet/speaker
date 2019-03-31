@@ -64,3 +64,51 @@ class DB:
                 "JOIN songs_in_playlists ON (songs_in_playlists.playlists_id=:id AND songs_in_playlists.songs_id=songs.id)"
         self.c.execute(query, {'id': id})
         return self.c.fetchall()
+
+    def getSongByName(self, url):
+        query = "SELECT * FROM songs WHERE url = :url"
+        self.c.execute(query, {'url': url})
+        return self.c.fetchone()
+
+    def addSong(self, userId, name, url):
+        query = "INSERT INTO songs (users_id, name, url) VALUES (:userId, :name, :url)"
+        try:
+            self.c.execute(query, {'userId': userId, 'name': name, 'url': url })
+            self.conn.commit()
+        except sqlite3.IntegrityError:
+            return False
+        return self.getSongByName(url)
+
+    def getSongById(self, songId):
+        query = "SELECT * FROM songs WHERE songs.id = :songId"
+        self.c.execute(query, { 'songId': songId })
+        return self.c.fetchone()
+
+    def deleteSong(self, songId):
+        query = "DELETE FROM songs_in_playlists WHERE songs_id = :songId"
+        self.c.execute(query, {'songId': songId})
+        query = "DELETE FROM songs WHERE id = :songId"
+        self.c.execute(query, {'songId': songId})
+        self.conn.commit()
+        return True
+
+    def getPlaylistById(self, playlistId):
+        query = "SELECT * FROM playlists WHERE id = :playlistId"
+        self.c.execute(query, { 'playlistId': playlistId })
+        return self.c.fetchone()
+
+    def addSongToPlaylist(self, playlistId, songId):
+        query = "SELECT * FROM songs_in_playlists WHERE playlists_id = :playlistId AND songs_id = :songId"
+        self.c.execute(query, {'playlistId': playlistId, 'songId': songId})
+        if self.c.fetchone():
+            return False
+        query = "INSERT INTO songs_in_playlists (playlists_id, songs_id) VALUES (:playlistId, :songId)"
+        self.c.execute(query, {'playlistId': playlistId, 'songId': songId})
+        self.conn.commit()
+        return True
+
+    def removeSongFromPlaylist(self, playlistId, songId):
+        query = "DELETE FROM songs_in_playlists WHERE playlists_id = :playlistId AND songs_id = :songId"
+        self.c.execute(query, {'playlistId': playlistId, 'songId': songId})
+        self.conn.commit()
+        return True

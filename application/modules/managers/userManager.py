@@ -14,10 +14,10 @@ class UserManager(BaseManager):
 
     def __init__(self, options):
         super().__init__(options)
+        self.mediator.set(self.TRIGGERS['GET_USERS'], self.getUsers)
         self.mediator.set(self.TRIGGERS['LOGIN'], self.login)
         self.mediator.set(self.TRIGGERS['LOGOUT'], self.logout)
         self.mediator.set(self.TRIGGERS['REGISTER'], self.register)
-        self.path = options['pathToPlaylists']
 
     # Метод, проверяющий данные на валидность
     @staticmethod
@@ -33,17 +33,15 @@ class UserManager(BaseManager):
                 return True
         return False
 
+    def getUsers(self, data):
+        return self.users
+
     def __getUserData(self, user):
-        # Получить песни через медиатор
         songs = self.mediator.get(self.TRIGGERS['GET_USER_SONGS'], user)
-        # Получить плейлисты через медиатор
         playlists = self.mediator.get(self.TRIGGERS['GET_USER_PLAYLISTS'], user)
-        # Заполнить юзера
         user = User({ 'id': user['id'], 'login': user['login'], 'password': user['password'], 'token': user['token'],
                       'songs': songs, 'playlists': playlists })
-        # Добавить юзера к активным юзерам
         self.users.update({ user.token: user })
-        # Обнулить пароль, перед отправкой на клиент
         user.password = None
         return user.get()
 
@@ -85,6 +83,6 @@ class UserManager(BaseManager):
             password = data['password']
             result = self.db.register(login, password)
             if result:
-                os.mkdir(self.path + login)
+                os.mkdir(self.path + login)  # Создаем папку для песен нового пользователя
                 return result
         return False

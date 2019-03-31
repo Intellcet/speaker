@@ -5,6 +5,11 @@ class ApiAnswer:
         2000: 'error with trying add to DB',
         2010: 'incorrect login/logout data',
         2020: 'registration error',
+        3010: 'file is not an audio file',
+        3020: 'song is not exists',
+        3030: 'can not delete this song',
+        3040: 'can not add song to playlist',
+        3050: 'can not delete song from playlist',
         404: 'element not found',
         9000: 'unknown error'
     }
