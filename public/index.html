@@ -2,9 +2,426 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speaker</title>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/main-container.css">
+
+    <link rel="stylesheet" href="css/popup/login-popup.css">
+    <link rel="stylesheet" href="css/popup/playlist-popup.css">
+    <link rel="stylesheet" href="css/popup/add-song-popup.css">
+    <link rel="stylesheet" href="css/popup/upload-song-popup.css">
+    <link rel="stylesheet" href="css/popup/add-new-playlist-popup.css">
+
+    <link rel="stylesheet" href="css/content/radio.css">
+    <link rel="stylesheet" href="css/content/profile.css">
+    <link rel="stylesheet" href="css/content/speaker.css">
+
+    <link rel="stylesheet" href="css/player.css">
+
+
+    <script src="js/vendor/jquery-3.2.1.min.js"></script>
+    <script src="js/vendor/md5.min.js"></script>
+
+    <script src="js/settings.js"></script>
+    <script src="js/mediator.js"></script>
+
+    <script src="js/server/server.js"></script>
+
+    <script src="js/login/login.js"></script>
+
+    <script src="js/main/profile/profile.js"></script>
+    <script src="js/main/speaker/speaker.js"></script>
+
+    <script src="js/main/ui.js"></script>
+
+    <script src="js/main.js"></script>
+
 </head>
 <body>
-    <h1>Speaker's page</h1>
+    <main class="main-block">
+        <div class="container">
+            <header>
+                <button class="header-btn login-btn">Войти</button>
+                <button class="header-btn reg-btn">Регистрация</button>
+            </header>
+            <div class="main-container">
+                <menu class="side-menu">
+                    <li class="menu-elem profile">Профиль</li> <!-- selected-elem -->
+                    <li class="menu-elem radio">Радио</li>
+                    <li class="menu-elem speaker selected-elem">Колонка</li> <!-- speaker-active -->
+                </menu>
+                <section class="main">
+                    <div class="content-container">
+                        <section class="profile-content"></section>
+
+                        <section class="radio-content"> <!-- selected-content -->
+                            <div class="header-content-row">
+                                <p class="header-row-elem header-row-name">Название</p>
+                                <p class="header-row-elem header-row-time">Время</p>
+                                <p class="header-row-elem header-row-like">Нравится</p>
+                            </div>
+                            <section class="content">
+                                <div class="content-row">
+                                    <p class="content-row-elem content-row-name">Название песни</p>
+                                    <p class="content-row-elem content-row-time">3:23</p>
+                                    <svg version="1.1" class="content-row-elem content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                         width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
+                                        <path class="like-svg" d="M94.5,35.5"></path>
+                                        <path class="like-svg" d="M118.5,38.5"></path>
+                                        <path class="like-svg" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
+                                            c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
+                                            c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
+                                            c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
+                                    </svg>
+                                </div>
+                            </section>
+                        </section>
+
+                        <section class="profile-content">
+                            <section class="profile-content-header">
+                                <div class="profile-header-tabs"><p class="profile-header-text">Плейлисты</p></div>
+                                <div class="profile-header-tabs"><p class="profile-header-text selected-profile-tab">Песни</p></div>
+                            </section>
+                            <section class="profile-content-content">
+                                <section class="profile-content-playlist ">
+                                    <button class="add-playlist-btn">+</button>
+                                    <section class="profile-content-playlist-header">
+                                        <div class="profile-content-playlist-header-row">
+                                            <p class="playlist-header-row-name">Название плейлиста</p>
+                                            <p class="playlist-header-row-songs">Количество песен</p>
+                                        </div>
+                                    </section>
+                                    <section class="profile-content-playlist-content">
+                                        <div class="profile-content-playlist-row">
+                                            <p class="profile-content-playlist-name">Название плейлиста</p>
+                                            <p class="profile-content-playlist-songs">20 песен</p>
+                                        </div>
+                                    </section>
+                                </section> <!-- selected-profile-content -->
+                                <section class="profile-content-song selected-profile-content">
+                                    <button class="add-song-btn">+</button>
+                                    <section class="profile-content-song-header">
+                                        <div class="profile-content-song-header-row">
+                                            <p class="song-header-row-name">Название песни</p>
+                                            <p class="song-header-row-time">Время</p>
+                                            <p class="song-header-row-like">Нравится</p>
+                                        </div>
+                                    </section>
+                                    <section class="profile-content-song-content">
+                                        <div class="profile-content-song-row">
+                                            <p class="profile-content-song-name">Название песни</p>
+                                            <div class="options-container"> <!-- shown-options -->
+                                                <div class="options"><div></div><div></div><div></div></div>
+                                            </div>
+                                            <p class="profile-content-song-time">3:23</p>
+                                            <svg version="1.1" class="profile-content-song-like content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                 width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
+                                                <path class="like-svg" d="M94.5,35.5"></path>
+                                                <path class="like-svg" d="M118.5,38.5"></path>
+                                                <path class="like-svg" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
+                                                    c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
+                                                    c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
+                                                    c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="sub-menu "> <!-- show-sub-menu -->
+                                            Добавить в ...
+                                            <p class="sub-menu-playlist-name">Первый плейлист</p>
+                                        </div>
+                                    </section>
+                                </section>
+                            </section>
+                        </section>
+
+                        <section class="speaker-content selected-content">
+                            <div class="speaker-container">
+                                <section class="speaker-header">
+                                    <p class="speaker-header-elem">Плейлисты</p>
+                                    <p class="speaker-header-elem">Песни</p>
+                                </section>
+                                <section class="speaker-content-container">
+                                    <button class="edit-btn">+</button>
+                                    <section class="speaker-content-playlist">
+                                        <div class="speaker-content-playlist-row chosen-playlist"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
+                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
+                                            <p class="speaker-content-playlist-songs">20 песен</p>
+                                        </div>
+
+                                    </section>
+                                    <section class="speaker-content-song chosen-playlists-songs"> <!-- chosen-playlists-songs -->
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div><div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+                                        <div class="speaker-content-song-row">
+                                            <p class="speaker-content-song-name">Название песни</p>
+                                            <p class="speaker-content-song-time">3:23</p>
+                                        </div>
+
+                                    </section>
+                                </section>
+                            </div>
+                        </section>
+
+                        <!-- Popup-ы -->
+                        <div class="popup-wrapper"> <!--show-popup-->
+                            <div class="popup">
+                                <!-- Логин/Регистрация -->
+                                <section class="login-popup "> <!--show-action-popup-->
+                                    <input class="login-input" type="text" placeholder="Введите логин" />
+                                    <input class="password-input" type="password" placeholder="Введите пароль" />
+                                    <label><input class="checkbox-input" type="checkbox" /> &nbsp; Запомнить данные</label>
+                                    <button class="login-login-btn">Войти</button>
+                                    <p class="login-error-msg">&nbsp;</p>
+                                </section> <!--show-action-popup-->
+                                <!-- Выбран плейлист -->
+                                <section class="selected-playlist-popup ">
+                                    <div class="selected-playlist-container">
+                                        <section class="selected-playlist-header">
+                                            <button class="selected-playlist-add-song-btn">Добавить песню</button>
+                                            <span class="selected-playlist-name">Название плейлиста</span>
+                                            <button class="selected-playlist-delete-btn">Удалить</button>
+                                        </section>
+                                        <section class="selected-playlist-content">
+                                            <div class="selected-playlist-content-header">
+                                                <p class="selected-playlist-header-row-elem selected-playlist-header-row-name">Название</p>
+                                                <p class="selected-playlist-header-row-elem selected-playlist-header-row-time">Время</p>
+                                                <p class="selected-playlist-header-row-elem selected-playlist-header-row-like">Нравится</p>
+                                            </div>
+                                            <section class="selected-playlist-content-content">
+                                                <div class="selected-playlist-content-row">
+                                                    <div class="selected-playlist-info-row">
+                                                        <p class="selected-playlist-content-row-elem selected-playlist-content-row-name">Название песни</p>
+                                                        <p class="selected-playlist-content-row-elem selected-playlist-content-row-time">3:23</p>
+                                                        <svg version="1.1" class="selected-playlist-content-row-elem selected-playlist-content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                         width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
+                                                        <path class="like-svg" d="M94.5,35.5"></path>
+                                                        <path class="like-svg" d="M118.5,38.5"></path>
+                                                        <path class="like-svg" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
+                                                            c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
+                                                            c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
+                                                            c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
+                                                    </svg>
+                                                    </div>
+                                                    <button class="selected-playlist-content-row-elem selected-playlist-content-row-delete-btn">X</button>
+                                                </div>
+                                            </section>
+                                        </section>
+                                    </div>
+                                </section>
+                                <!-- Добавить песню в плейлист -->
+                                <section class="add-song-popup-bg ">
+                                    <section class="popup add-song-popup">
+                                        <div class="add-song-popup-container pre-add">
+                                            <div class="choose-song-container">
+                                                <button class="add-song-popup-chose-btn">Выбрать песню</button>
+                                                <p class="add-song-popup-song-name">Выбраннаяa sda sda sda sda sad asd as dsad sad asd asdas das dsa d песня</p>
+                                            </div>
+                                            <button class="add-song-popup-add-btn">Добавить песню</button>
+                                        </div>
+                                        <div class="add-song-popup-list-container">
+                                            <div class="add-song-list-row">
+                                                <p class="add-song-list-elem add-song-list-elem-name">Название песни</p>
+                                                <p class="add-song-list-elem add-song-list-elem-time">3:23</p>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </section>
+                                <!-- Добавить песню -->
+                                <section class="add-new-song-popup">
+                                    <div class="upload-song-container">
+                                        <input class="upload-song" type="file" accept="audio/mpeg, audio/x-mpeg-3">
+                                        <button class="upload-song-btn">Upload song</button>
+                                    </div>
+                                </section>
+                                <!-- Добавить плейлист -->
+                                <section class="add-new-playlist-popup">
+                                    <div class="add-playlist-container">
+                                        <input class="playlist-name" type="text" placeholder="Введите название плейлиста">
+                                        <button class="add-new-playlist-btn">Добавить плейлист</button>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <section class="player-container">
+            <section class="progress-bar">
+                <div class="progress"></div>
+                <div class="marker"></div>
+            </section>
+            <section class="control-panel">
+                <span class="timestamp">0:30 / 3:42</span>
+                <div class="about-song">
+                    <p class="playing-song-name">Название песни</p>
+                    <p class="playing-song-performer">Исполнитель</p>
+                </div>
+                <!--Like btn-->
+                <svg version="1.1" class="like-playing-song-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
+                    <path class="like-svg like-playing-song-image" d="M94.5,35.5"></path>
+                    <path class="like-svg like-playing-song-image" d="M118.5,38.5"></path>
+                    <path class="like-svg like-playing-song-image" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
+                        c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
+                        c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
+                        c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
+                </svg>
+                <div class="main-control">
+                    <!--Prev btn-->
+                    <svg class="prev-song-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0.986in" height="1.486in">
+                        <image class="prev-song-image" x="0px" y="0px" width="0px" height="0px"  xlink:href="data:img/png;base64,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"></image>
+                    </svg>
+                    <!--Play/pause-->
+                    <svg class="main-btn-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1.917in" height="1.917in">
+                        <image class="main-btn-image"  x="0px" y="0px" width="0px" height="0px"  xlink:href="data:img/png;base64,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"></image>
+                    </svg>
+                    <!--Next btn-->
+                    <svg class="next-song-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0.986in" height="1.486in">
+                        <image class="next-song-image" x="0px" y="0px" width="0px" height="0px"  xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAABrCAMAAAASAG9gAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAACZ1BMVEUAS04ASk4AS08AtLoAtboAtLkAS04ASk4AfIEAkpYAio4Ai48ASk4AlJkAhooAS04AoqgAl5sArLEAio4ApasAg4cAnqIAg4cAlpwAhooAj5MAjJAAiI4AS04Am6AAhIgAS04Aq7AAkZUAqa0AiIwAoacAm6AAg4gAk5kAh4sAjJAAS04AkZUAhooAS04AgoYArLEAio8Ap6wAhYkAn6QAmJwAhYkAkJQAjJIAio4ASk4AmZ4AhIgASk4AqrAAkpcAqa8Ah4wApKgAm58AlJkAjJIAkZYAh4wAoKQAgoYASk4AsbcAqKwAoKUAg4gAmJ0AkJUAio8AS04AlpsAhooAS04AqK0Aqq8Ao6gAnKAAlJkAiI0AjZEAh4wAS04AnaIAg4cAS04AsLUAjZEAp60AoKYAmZ0Ag4cAkZcAio8AhYkAS04ApKkAlZkAq7AAiI0ApKoAhYoArLIAj5MAqK4Am58Ag4cASk4AiIwAS04AhYkAjpMAlpoAnaIAh40ApaoApaoAlJgAq7AAhYoAiY8Aio4AS08AhYoAkJYAmJwAn6UAsrcAjZIAp6wAoKUAgocAS04AkpYAhosASk4AjJEAk5gAm6AAo6cAkZYAqq4AnKEAjpMAlpsAnaIAio8ApakAoqcArLEAhYkASk4Ai48Ai5AAkpcAoKUAqK0AnaMAg4gAS04Ah4wAjZIAlZkAqq8AmZ0AhYkAS04AjJEAiY0AkZUAg4cAl5sAg4gAoKQAiY4ApaoAoqcAhosAfYIAkpcASk4AS04AgoYAgocAg4cAe38AtboAtLkAtLoAen8Ae4AAfYH///8hr3AYAAAAwnRSTlMAAAAAAACtRvKp87sB8c0H9vJ78oT1kPaf9LHxxAPz1Qz58n/0ipf1pvO5AfHMBtx68YP1j570r/LCA/LTC/nxfvOIlaW48cr12hD+go72nK3AAvLRCfh9h5Sj9LXIBfTZDvzxgYya9Ku+0Aj38nzyhvP78YDz1w3HBPO0opPyhvfyfdHywAL1rZyO/vKC9doR8csGuKaWifJ/87KgkfKF9XzPCPK9qoyB9NkPybakfvPTC/LCr/ee9I/yhPbN86iwRnHHlUcAAAABYktHRMwa15PTAAAAB3RJTUUH4wQUCyUbGDxTbgAACsNJREFUWMNdWQeDZEUR3r1+bUKEA9dVEQmieC6CiJ6YFRQzBgQzKipmUTEnxJxzwJxzzjn17HXX3f0pu+r7vu537N3MvPdmpqbCV1+Ft3Wb225tbW/53wG+9PNtv7S9feDAge1tvc3X7QM66x8qm1LKfn+UrSO3u31aUsp5WZbcD/rL4mc49yc/TjhJS+7v5Tjr19OmNqut/222jtQ7nHRHvIe/HJ/ushLO/L1+GsL7U1xJLrWfl1pbrdVq16fVk+90Snx14btZCoYm/rsuyK+7uknX+2vpYprL2mwd7UenHjzNfxGCEsxY8lTIJYd5mfbJ4E2toY7r01+anX5n/UjK8NECfdICDTI0mm/EU7GQQjmtO2vnLtOKDJf0R16m15Zl/ALcmdyu6la1VraOdYHWD3fvmucPJSifGUcXkcNn4WC4LPTBl616vNxVXae73Z2x90/iY1KDR25bYINBoF3WHeN2uYl+fsY9zozAIuQJatHCJWTLPQMTxfHjpnV9WgskdVH3POtsqZEHFNPaOgQNSHVZpQFAro9VntR2zrn3cuhQe1hIB2fiYPgwDnrce5C6Sq6P9SOgstXz7r0I2cLMgshTEeUMnOY4HHGvbqRBpbp7nxyJweDCPnyPkhc+ucji7nGnRLy6al2IQdD5983SHBBIE84hXGLTwvxyFfY7fupwUJdl9dD99oh+uSO+ngeIE/ztrt4Y0oJxrxAbJFDrBfe/MMMlkhUoDKIgChcSzCaMahOHgaEGpeqpFz2AybmMfA3wKEszr+YNv1ERd9gIzwecLn5gZqRhQgoASMXBeXkT2WXBY5GmwKUBk93jlzwogkUmzCt/kRuRGqWGDe7nI0BzRdBCMQfW7oPFSKTAAUT3b2SG52lYYog7U7/J2Tg+/BCRHuG0yGGg8LiyiWzvj7J1FG4JKysxEEZe+tCHzVhBL9AtMjgCVlZxdytcKgTXRjy2+vBHPJJVIq8SixYh8AXetOCxxni3RveEx7p5j3r0Y0iSJJxwDck7VCzOgJ6ozvP+iqwFrv09Quqxl7F+jayQEFzY0BMuJxBAckXoI2QWkncuV2qEbxMZQ7IKksn5+Sh4dQYqTAoD/cLO44iZzBRfRsVNrk+kgcfrGJHU9P3KjG24eujxe6rDIzPAsF3WPiPUer6bAUutKuuHUvF0xRMuTGCftAxeY8oU/HazqMvhZ6RXExE1HPvhE5/0ZNdALJ+HNOdVG/zcWFqlSni9kf1D7lMufSpSFbYtg2A9L1q4CH6GKh4ijx2pEkcWiD38tBPUyPBRinoaMN53fRrlIPEragAhRCOvfPogr0GtzoeiP9cHjsCjsbBVZks8/P8lz5j0jkzxYrTRp4J/iKUQPWqZU3Vb0dvFz3wWyiPIGuRWoHT0PxH/6VdDlabTwy70Alc9+2oFDLCcfZRFvCI8oxQigZm8BCeCcs0Vzwk1UmYtCj/DE1EvGlRgzBk91TP9hL916LnRQSQVsGVDn1iJ+oWu05rQWBXCwGqD4T11bed5ebYxXVA5sV4EooVEg3m6FrLN6LLd57NFRJYUo/0FfUslmYa3iW8DpFodYfMPvuCF8DPakUJWaOgzYWMlqc68p5BV2tZ27ouuHdXQ/RyIdV5lQKrYVXWoNnICZDFTWn3xS16aRWdFPLWvfqyqM2/iV30f1dHopX71upe9XPNCaaRQ1C+BZFYLhe2Es5Djog+/As1x9IcRFPrHomMxpiZdYXA7CmZjpiF9dq8H1W+AO84XpkjRHuDSkHWNLbuQAVi88lXqV9E/93w3EtcMDduFJkginCs26K+nv3qP/BN5WqZ/zFbhVsbCv35oijy9efA1r12WfZhZDTg0lvRwxsAhnVWZGbPg4iOve/0b0B+6lgX9TxOVUoIxvdg6tGZCxagB/dINb0Q/b6iD+EmZQg/MhCMP1Siwo6zEp3aOVxb4kAPWCRH6OVLFoEPmhqm88epx/r7nBXGDDBeWYUkTpAZf28q4Vt90vJEugw+DFRRQpv9UwhQkW2HbL775xrcUpdGG/DOBMUBgI2zNiFQZHa5469ve3usOotvrxbGqjgdOQVKGU0eOteH8Omj7xne8MwdviA8xfFkdaDXV51H1xT0rm9/1bvJqJLyRV2evymaM+jax9FCJbtt9D/o60orN+cvUQ9+K1ehbORtO2Hkvuqsif0afyVZ19Jui5slizFr4rtX33RRVJ4nnkadqKyc9k7VmZyV+jP/vv/kDCVOh95neSbY660WdXaKtfavudTDvwQ9era4+bYQuzE0n0DL5RrzTyPjKhw99+COJDQz5p4HnRx5Y1QA+AKdIi0/MPvqxdXdfFNXIr3U3qDqh4s6UQjjNrvz4HMR6v7ARvIvvbSZRtOlT1mKb7YsXik9wSImuLC0b9W3e/6B5J5+biLOZsakV9bdPfurTGlzRCS/yD/sWdjyG9qKtqzMVcZ0+89nPYcmhRQHyK35mg3mnzQ4BzYuN8gqC6f8+/4UvzvEALV4qSG/TPDirBMsWHWJtMP2hL+0tXJ0l7evU11XkxWhVR6DEsKNlaDtfxhiWOVpgNCwKcchZEeBsEuAkEontfmWsEbVfcC9tGrMceEatmaUJVUA9ST8876uaAble0pwrzIZ/VLkYYKAYSRaMcs4tX1OMxooLUSv0g2lOGWVhsg47kla/ftbZaiwTNpKZQ6H3UUDr6H+4JGMNmmkeazMsEBNXf1n7hYx+1cbcNDyNvqLNAtbq4W9oi8TxXeOpSyyNQ8A+5DQRx5RHNO1+U5s1bd+WsYvLvd9AqTb284zuqn4zaOd/a6zHkmbBPHeRG6VB1EHuJJkMRt7x029/R0kZc0DsABcsUGJiLVqtcD82Z+1BW/3fd0/+Hjciq+X0an5flsL4wM9MASbIIMarvv+D1U5jyXOK5/KG9dR1R7w07Iy2xZ9++KM9+hT7P24z0fBqj8R2j31vUJZmCb7s/Hg11WbFTGubhHgVMUXUZROLDILvg+31kdoJCz75JnGwXJizRXwXc+7sa7GQdCL+ydyix55W61tI4GJz2dfAtQ8eMyUo5F93xk+xfxoQXOgfRirRvKKRCnt1U88PUv3Zz3+hBV1a7SO5t8GMihDuq1Zzn4mxhc3TLb+8VjuDebdAtxsEbISuiPjCz9zSUfR5v5qQS0pzrB25n2fG59iPoduBXXPes7b7a9HUXIrkwT5YI2oVvYR/3IiopxprXNzO5Xls8VeLzDxUwKI1w1nYj3V9on7VkaR26LI8bqyM5WxOpNGkDNHCtqz6Z2saqus1F/wGWFvf/WBstKHVAB8q7atBIj+jlfvt734P/QN6IoplQlBpntS7bBq3l9gjgZj/8MczJ1QSVt5Y+tCwxMUYaxjmQZQD9M8h5vCfsu4GpKQozZU+oi0bIdT50Ea+g9L+/BekccIWNHHFvHAfmnDDift0LJOiDzf1LTHt1b/+jftB2pPUKi2675W0a0/zXlLhLiLuy7hCf/+H1sq626R17K1P85AH3kAewK5/XnRajgVRXmFsxH3efgCc591H7MM1L9vN/zolD6iTI3RbaEnrZfHYHtLiot7J8+KGk/Z4c3F8PXPvxNWcsnwUwIEfdQO9z/z3f3jrL817JoIv6Y+QCvCAmeHuxPsy3if893+8OTvv2M4btlu4rxv3cPkeruJpu/gNXb+nW/4PUAh78ruvI2IAAAAASUVORK5CYII="></image>
+                    </svg>
+                </div>
+                <div class="volume-control">
+                    <!--Speaker - -->
+                    <svg class="speaker-min-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1.083in" height="1.458in">
+                        <image class="speaker-min-image" x="0px" y="0px" width="0px" height="0px"  xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAABpCAMAAACj3eWhAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABdFBMVEUAAAD///8AS04ASk4ASk4AS04ANzoAGhsAODoANzkAGhwASk4AGh0ANjgANjkAGx4ANTgAHB4ANTcAHB0ANDYASk4AHB4AS04ANDcAHiAANDYASk4AS08AHyAASk4AMjUAMzUAICEAS04AMzUAS08ASk4AISIAS04AMTQASk4AISIAS04AS04ASk4AAAAASk4AISMAS04AICMAS08ASk4AISQAIiQAIyQAS04AS08AJCUAS04ASk4AS08AS04AIyUAS04AS04AS04ASk0AS04AS04AS04ASk0AS04ASk4AS04AS04ASk4ASk4ASk4AS04ASk4ASk4ASk4AFxgAS04AIyYAS08AS04AS04ASk4AS04ASk4AMjQAMjUAS08AHyAAS04AHSAAHR8AHR4AGx0ANzoAS08AS04AAAAASk4AHiAAHSAAHR8AAQEAEBEALjAABwcAP0IAQEIABwgALTAAS08ADQ4AAQIADg8ABgcAAgL////GahBUAAAAZ3RSTlMAABC8qg/WwNbVwA/A1NTA08DTwNIOwQ7SwdENDcEM0dHCDNALC8IL0ArDwQrA/b/DvsMKvcPDxLu6xIiIiMPE7cBx51p/XOxsuub55rsQXVztcb+6xLy8vb6/wdDQDMINwcHAwNWqWAvDcAAAAAFiS0dEAf8CLd4AAAAHdElNRQfjBBQLLQUq6uQFAAACxklEQVRo3s2Zi3fSMBTGr2DBUfdwMlFUZEzmOqtuzulc8YFT5/ut8+18NlDnlG2+/nrTFhkgbZPm85wFmlLI+fElt03uvSFSLonk9m1/izpNS6VtHE7bkWY4nNaXYayGwul9OxkOp/W7NFRntQGPBlKnDwwyHE4b2uXTIJ3Vh3czHE7LtmiAzo5k97Ro6upye/cxHC6Xb6ep4vZ30hRxB/IHGQ5XONRFU8IViqNdNJUbpTT2D01B3eEetPi48tg4w+GOTPSixcUZE5O9aDFNYRztTYunzjw2eZzB1JknpgJocdSZ04G0GDhj+mQgTR43c2o2mCY9dkbydAhNVp2ZPBNGk8QZc+E0uc6aZ+fDae3qLMuqVPjBa37i5ZzlXXkv78fzFyJo7ersulscv3YcftQ/+1/wt/fJjqJ14KLaMoEWm7haZGOBFjLqpHAIdTZ27KTUSZkCbFmwKbbg2NXsi9VLBdyNwla+rC5chlnWrb5+u4IaO69eaVzFWLbJWFtMgMbOL+vXBNRtCOO+X8c8Fc3zjxsk/t8CLW4CLcttewva2Z+3obhVEcsKt/i1eAf3kLHfjbug6dOt1hqoZ9adUdYX7qFm4w37fvVBCTa5/7+lB7wwQtaKLb1sgz0osH8n1VmBCbbTN3Y8T9j1hR2n3rxuFUfKFK7HXml66c3asjav+Xn2YZSvLRWmmI8ei8cVIry5eWDUw6OoJ+FRlGzEaC5NASNGznsaFs/KR9thsXuc1IL5DJkL4LznyEwF51WD8ijxkkYzL5BZHq7v5TgSB86QEZVfjSJxVIZmF4leQ3OfRKXiGySOCkVk3phouStHrppzX86/VZ0COsoIdEeAKJd9h8Rx3nskjrQ2HmJjSxsaBKrjvOEPSBzp/g4jbI9R788gcaT7e5aw/VntYwaozt3vTSNxpKfSuM66/U1lgOqIEkufWrg/fxwzYL36o5cAAAAASUVORK5CYII="></image>
+                    </svg>
+                    <!--Volume-->
+                    <section class="volume-bar">
+                        <div class="volume"></div>
+                        <div class="volume-marker"></div>
+                    </section>
+                    <!--Speaker + -->
+                    <svg class="speaker-max-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1.806in" height="1.458in">
+                        <image class="speaker-max-image" x="0px" y="0px" width="0px" height="0px"  xlink:href="data:img/png;base64,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"></image>
+                    </svg>
+                </div>
+            </section>
+        </section>
+    </main>
 </body>
 </html>

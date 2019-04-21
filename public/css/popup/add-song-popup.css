@@ -1,0 +1,102 @@
+.add-song-popup-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 130px;
+    right: 0;
+    background: rgba(245, 245, 245, 0.5);
+    /*display: flex;*/
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-song-popup-container {
+    height: 100%;
+    width: 50%;
+    margin: 0 auto;
+    /*display: flex;*/
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pre-add {
+    display: flex;
+}
+
+.choose-song-container {
+    margin-bottom: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-song-popup-add-btn, .add-song-popup-chose-btn {
+    border: 1px solid #3c767a;
+    background: linear-gradient(#498b8f, #5ab2b8);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+}
+
+.add-song-popup-chose-btn {
+    height: 40px;
+    width: 130px;
+}
+
+.add-song-popup-add-btn {
+    height: 60px;
+    width: 150px;
+}
+
+.add-song-popup-song-name {
+    margin: 0;
+    max-width: calc(100% - 140px);
+    max-height: 60px;
+}
+
+.add-song-popup-list-container {
+    margin: 20px auto 0 auto;
+    width: 80%;
+    flex-direction: column;
+}
+
+.add-song-list-row {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #b5b5b5;
+}
+
+.add-song-list-row:hover {
+    background-color: #dfe4e4;
+    cursor: pointer;
+}
+
+.add-song-list-elem-name, .add-song-list-elem-time {
+    margin: 0;
+}
+
+
+@media (max-width: 420px) and (max-height: 815px) {
+
+    .choose-song-container {
+        flex-direction: column;
+        height: 150px;
+        justify-content: space-around;
+    }
+
+    .add-song-popup-song-name {
+        max-width: unset;
+    }
+
+    .add-song-popup {
+        overflow: scroll;
+    }
+
+}

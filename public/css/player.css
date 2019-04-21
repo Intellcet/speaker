@@ -1,0 +1,209 @@
+.player-container {
+    width: 100%;
+    height: 129px;
+    background-color: #fff;
+    box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.3);
+    position: fixed;
+    bottom: 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 13px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.progress {
+    width: 100%;
+    height: 13px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: left center;
+    transform: scaleX(0.011); /*изменяем в диапазоне 0..1 для демонистрации движения ползунка*/
+    background-color: #5ab3b8;
+}
+
+.marker {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: -8.5px;
+    left: 1%; /*изменяем для демонстрации движения бегунка*/
+    background-color: #5ab3b8;
+    border: 1px solid #164c4f;
+    border-radius: 100%;
+}
+
+.timestamp {
+    font-size: 15px;
+    position: absolute;
+    right: 29px;
+    top: 10px;
+}
+
+.control-panel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.about-song {
+    max-width: 342px;
+    height: 80px;
+    margin: 0 auto 0 20px;
+}
+
+.main-control {
+    height: 100%;
+    max-width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.volume-control {
+    height: 100%;
+    max-width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 20px 0 auto;
+}
+
+.playing-song-name {
+    font-size: 26px;
+    color: #000;
+    margin-top: 0;
+}
+
+.playing-song-performer {
+    font-size: 20px;
+    color: #7d7777;
+    margin: 0;
+}
+
+.like-playing-song-svg {
+    width: 57px;
+    height: 46px;
+}
+
+.like-playing-song-image {
+    width: inherit;
+    height: inherit;
+}
+
+.prev-song-svg {
+    width: 50px;
+    height: 30%;
+}
+
+.prev-song-image {
+    width: 100%;
+    height: 100%;
+}
+
+.main-btn-svg {
+    width: 70px;
+    height: 100%;
+}
+
+.main-btn-image {
+    width: 100%;
+    height: 100%;
+}
+
+.next-song-svg {
+    width: 50px;
+    height: 30%;
+}
+
+.next-song-image {
+    width: 100%;
+    height: 100%;
+}
+
+.speaker-min-svg {
+    width: 20%;
+    height: 30%;
+}
+
+.speaker-min-image {
+    width: 100%;
+    height: 100%;
+}
+
+.volume-bar {
+    width: 30%;
+    height: 13px;
+    position: relative;
+    left: -2%;
+    border: 1px solid #164c4f;
+}
+
+.volume {
+    width: 100%;
+    height: 100%;
+    background-color: #5ab3b8;
+    transform-origin: left center;
+    transform: scaleX(0.3); /*изменяем в диапазоне 0..1 для демонистрации движения ползунка*/
+}
+
+.volume-marker {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: -5px;
+    left: 28%; /*изменяем для демонстрации движения бегунка*/
+    background-color: #5ab3b8;
+    border: 1px solid #164c4f;
+    border-radius: 100%;
+}
+
+.speaker-max-svg {
+    width: 20%;
+    height: 30%;
+}
+
+.speaker-max-image {
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 1400px) {
+    .volume-bar {
+        width: 50%;
+    }
+}
+
+@media (max-width: 420px) and (max-height: 815px) {
+    svg {
+        display: flex;
+        justify-content: center;
+    }
+    .about-song { display: none; }
+    .like-playing-song-svg { display: none; }
+    .control-panel {
+        flex-direction: column;
+        padding-top: 12px;
+    }
+    .main-control {
+        height: 50%;
+        width: 100%;
+        margin: 0;
+        max-width: unset;
+        justify-content: center;
+    }
+    .volume-control {
+        height: 50%;
+        width: 100%;
+        margin: 0;
+        max-width: unset;
+        justify-content: center;
+    }
+}

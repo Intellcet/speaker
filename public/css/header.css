@@ -1,0 +1,27 @@
+header {
+    width: 100%;
+    height: 80px;
+}
+
+.header-btn {
+    height: 62px;
+    width: 157px;
+    border: 1px solid #3c767a;
+    background: linear-gradient(#498b8f, #5ab2b8);
+    color: #fff;
+    font-size: 20px;
+    float: right;
+    outline: none;
+}
+
+.reg-btn {
+    margin-right: 5.5%;
+}
+
+@media (max-width: 420px) and (max-height: 815px) {
+    .header-btn {
+        height: 30px;
+        width: 79px;
+        font-size: 10px;
+    }
+}
