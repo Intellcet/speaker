@@ -61,7 +61,7 @@ class Router:
         return self.web.json_response(self.api.error(2010))
 
     async def register(self, request):
-        data = await request.json()
+        data = await request.post()
         answer = self.mediator.get(self.TRIGGERS['REGISTER'], { 'login': data['login'], 'password': data['password'] })
         if answer:
             return self.web.json_response(self.api.answer(answer))

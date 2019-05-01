@@ -28,12 +28,17 @@
 
     <script src="js/settings.js"></script>
     <script src="js/mediator.js"></script>
+    <script src="js/ui/navigatorUI.js"></script>
 
     <script src="js/server/server.js"></script>
 
     <script src="js/login/login.js"></script>
+    <script src="js/register/register.js"></script>
 
     <script src="js/main/profile/profile.js"></script>
+    <script src="js/main/profile/UIProfile.js"></script>
+
+
     <script src="js/main/speaker/speaker.js"></script>
 
     <script src="js/main/ui.js"></script>
@@ -51,23 +56,21 @@
             <div class="main-container">
                 <menu class="side-menu">
                     <li class="menu-elem profile">Профиль</li> <!-- selected-elem -->
-                    <li class="menu-elem radio">Радио</li>
-                    <li class="menu-elem speaker selected-elem">Колонка</li> <!-- speaker-active -->
+                    <li class="menu-elem radio selected-elem">Радио</li>
+                    <li class="menu-elem speaker">Колонка</li> <!-- speaker-active -->
                 </menu>
                 <section class="main">
                     <div class="content-container">
-                        <section class="profile-content"></section>
-
-                        <section class="radio-content"> <!-- selected-content -->
+                        <section class="radio-content selected-content"> <!-- selected-content -->
                             <div class="header-content-row">
                                 <p class="header-row-elem header-row-name">Название</p>
-                                <p class="header-row-elem header-row-time">Время</p>
+<!--                                <p class="header-row-elem header-row-time">Время</p>-->
                                 <p class="header-row-elem header-row-like">Нравится</p>
                             </div>
                             <section class="content">
                                 <div class="content-row">
                                     <p class="content-row-elem content-row-name">Название песни</p>
-                                    <p class="content-row-elem content-row-time">3:23</p>
+<!--                                    <p class="content-row-elem content-row-time">3:23</p>-->
                                     <svg version="1.1" class="content-row-elem content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                          width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
                                         <path class="like-svg" d="M94.5,35.5"></path>
@@ -80,14 +83,13 @@
                                 </div>
                             </section>
                         </section>
-
                         <section class="profile-content">
                             <section class="profile-content-header">
-                                <div class="profile-header-tabs"><p class="profile-header-text">Плейлисты</p></div>
-                                <div class="profile-header-tabs"><p class="profile-header-text selected-profile-tab">Песни</p></div>
+                                <div class="profile-header-tabs" data-tab="playlist"><p class="profile-header-text">Плейлисты</p></div>
+                                <div class="profile-header-tabs" data-tab="song"><p class="profile-header-text selected-profile-tab">Песни</p></div>
                             </section>
                             <section class="profile-content-content">
-                                <section class="profile-content-playlist ">
+                                <section class="profile-content-playlist">
                                     <button class="add-playlist-btn">+</button>
                                     <section class="profile-content-playlist-header">
                                         <div class="profile-content-playlist-header-row">
@@ -107,7 +109,7 @@
                                     <section class="profile-content-song-header">
                                         <div class="profile-content-song-header-row">
                                             <p class="song-header-row-name">Название песни</p>
-                                            <p class="song-header-row-time">Время</p>
+<!--                                            <p class="song-header-row-time">Время</p>-->
                                             <p class="song-header-row-like">Нравится</p>
                                         </div>
                                     </section>
@@ -117,7 +119,7 @@
                                             <div class="options-container"> <!-- shown-options -->
                                                 <div class="options"><div></div><div></div><div></div></div>
                                             </div>
-                                            <p class="profile-content-song-time">3:23</p>
+<!--                                            <p class="profile-content-song-time">3:23</p>-->
                                             <svg version="1.1" class="profile-content-song-like content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                                  width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
                                                 <path class="like-svg" d="M94.5,35.5"></path>
@@ -136,156 +138,29 @@
                                 </section>
                             </section>
                         </section>
-
-                        <section class="speaker-content selected-content">
+                        <section class="speaker-content">
                             <div class="speaker-container">
                                 <section class="speaker-header">
                                     <p class="speaker-header-elem">Плейлисты</p>
                                     <p class="speaker-header-elem">Песни</p>
                                 </section>
                                 <section class="speaker-content-container">
-                                    <button class="edit-btn">+</button>
+<!--                                    <button class="edit-btn">+</button>-->
                                     <section class="speaker-content-playlist">
-                                        <div class="speaker-content-playlist-row chosen-playlist"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-                                        <div class="speaker-content-playlist-row"> <!-- chosen-playlist -->
-                                            <p class="speaker-content-playlist-name">Название плейлиста</p>
-                                            <p class="speaker-content-playlist-songs">20 песен</p>
-                                        </div>
-
+<!--                                        <div class="speaker-content-playlist-row chosen-playlist"> &lt;!&ndash; chosen-playlist &ndash;&gt;-->
+<!--                                            <p class="speaker-content-playlist-name">Название плейлиста</p>-->
+<!--                                            <p class="speaker-content-playlist-songs">20 песен</p>-->
+<!--                                        </div>-->
                                     </section>
                                     <section class="speaker-content-song chosen-playlists-songs"> <!-- chosen-playlists-songs -->
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div><div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-                                        <div class="speaker-content-song-row">
-                                            <p class="speaker-content-song-name">Название песни</p>
-                                            <p class="speaker-content-song-time">3:23</p>
-                                        </div>
-
+<!--                                        <div class="speaker-content-song-row">-->
+<!--                                            <p class="speaker-content-song-name">Название песни</p>-->
+<!--                                            <p class="speaker-content-song-time">3:23</p>-->
+<!--                                        </div>-->
                                     </section>
                                 </section>
                             </div>
                         </section>
-
                         <!-- Popup-ы -->
                         <div class="popup-wrapper"> <!--show-popup-->
                             <div class="popup">
@@ -293,7 +168,9 @@
                                 <section class="login-popup "> <!--show-action-popup-->
                                     <input class="login-input" type="text" placeholder="Введите логин" />
                                     <input class="password-input" type="password" placeholder="Введите пароль" />
-                                    <label><input class="checkbox-input" type="checkbox" /> &nbsp; Запомнить данные</label>
+                                    <label class="login-popup-login-elem">
+                                        <input class="checkbox-input" type="checkbox" /> &nbsp; Запомнить данные
+                                    </label>
                                     <button class="login-login-btn">Войти</button>
                                     <p class="login-error-msg">&nbsp;</p>
                                 </section> <!--show-action-popup-->
@@ -308,14 +185,14 @@
                                         <section class="selected-playlist-content">
                                             <div class="selected-playlist-content-header">
                                                 <p class="selected-playlist-header-row-elem selected-playlist-header-row-name">Название</p>
-                                                <p class="selected-playlist-header-row-elem selected-playlist-header-row-time">Время</p>
+<!--                                                <p class="selected-playlist-header-row-elem selected-playlist-header-row-time">Время</p>-->
                                                 <p class="selected-playlist-header-row-elem selected-playlist-header-row-like">Нравится</p>
                                             </div>
                                             <section class="selected-playlist-content-content">
                                                 <div class="selected-playlist-content-row">
                                                     <div class="selected-playlist-info-row">
                                                         <p class="selected-playlist-content-row-elem selected-playlist-content-row-name">Название песни</p>
-                                                        <p class="selected-playlist-content-row-elem selected-playlist-content-row-time">3:23</p>
+<!--                                                        <p class="selected-playlist-content-row-elem selected-playlist-content-row-time">3:23</p>-->
                                                         <svg version="1.1" class="selected-playlist-content-row-elem selected-playlist-content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                                          width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
                                                         <path class="like-svg" d="M94.5,35.5"></path>
@@ -338,14 +215,14 @@
                                         <div class="add-song-popup-container pre-add">
                                             <div class="choose-song-container">
                                                 <button class="add-song-popup-chose-btn">Выбрать песню</button>
-                                                <p class="add-song-popup-song-name">Выбраннаяa sda sda sda sda sad asd as dsad sad asd asdas das dsa d песня</p>
+                                                <p class="add-song-popup-song-name">&nbsp;</p>
                                             </div>
                                             <button class="add-song-popup-add-btn">Добавить песню</button>
                                         </div>
                                         <div class="add-song-popup-list-container">
                                             <div class="add-song-list-row">
                                                 <p class="add-song-list-elem add-song-list-elem-name">Название песни</p>
-                                                <p class="add-song-list-elem add-song-list-elem-time">3:23</p>
+<!--                                                <p class="add-song-list-elem add-song-list-elem-time">3:23</p>-->
                                             </div>
                                         </div>
                                     </section>
@@ -355,6 +232,7 @@
                                     <div class="upload-song-container">
                                         <input class="upload-song" type="file" accept="audio/mpeg, audio/x-mpeg-3">
                                         <button class="upload-song-btn">Upload song</button>
+                                        <p class="upload-song-error">&nbsp;</p>
                                     </div>
                                 </section>
                                 <!-- Добавить плейлист -->
@@ -362,6 +240,7 @@
                                     <div class="add-playlist-container">
                                         <input class="playlist-name" type="text" placeholder="Введите название плейлиста">
                                         <button class="add-new-playlist-btn">Добавить плейлист</button>
+                                        <p class="add-playlist-error">&nbsp;</p>
                                     </div>
                                 </section>
                             </div>

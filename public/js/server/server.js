@@ -61,6 +61,34 @@ class Server {
     }
 
     /**
+     * Метод для отправки запроса logout на сервер
+     * @param data = null
+     * @returns {Promise<any>}
+     */
+    logout(data = {}) {
+        data.url = `user/logout/${this.token}`;
+        return this.executeGet(data);
+    }
+
+    /**
+     * Метод для отправки запроса регистрации на сервер
+     * @param data = {login, password}
+     * @returns {Promise<any>}
+     */
+    register(data = {}) {
+        data.url = `user`;
+        return this.executePost(data);
+    }
+
+    getUser(data = {}) {
+
+    }
+
+    addSongToPlaylist(data = {}) {
+
+    }
+
+    /**
      * Выигрузить песню на сервер
      * @param data
      * @returns {Promise<any>}

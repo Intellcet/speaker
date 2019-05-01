@@ -81,7 +81,8 @@ class UserManager(BaseManager):
         if self.__checkData("register", data):
             login = data['login']
             password = data['password']
-            result = self.db.register(login, password)
+            hashPass = md5((login + password).encode("utf-8")).hexdigest()
+            result = self.db.register(login, hashPass)
             if result:
                 os.mkdir(self.path + login)  # Создаем папку для песен нового пользователя
                 return result
