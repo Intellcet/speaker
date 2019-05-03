@@ -59,18 +59,25 @@ $(document).ready(() => {
             VOLUME_BAR: $('.volume-bar'),
             PLAYER_CONTAINER: $('.player-container'),
         },
+        RADIO: {
+            RADIO_CONTAINER: $('.content'),
+        }
     };
 
     const mediator = new Mediator({...SETTINGS.MEDIATOR});
     const server = new Server({...SETTINGS});
+
     new NavigatorUI({$SELECTORS, server, ...SETTINGS, mediator});
 
-    new Login({$SELECTORS, server, ...SETTINGS, mediator});
+    new Login   ({$SELECTORS, server, ...SETTINGS, mediator});
     new Register({$SELECTORS, server, ...SETTINGS, mediator});
 
     new Player({$SELECTORS, server, ...SETTINGS, mediator});
 
+    new Radio  ({$SELECTORS, server, ...SETTINGS, mediator});
     new Profile({$SELECTORS, server, ...SETTINGS, mediator});
     new Speaker({$SELECTORS, server, ...SETTINGS, mediator});
+
+    mediator.call(mediator.EVENTS.SHOW_RADIO);
 
 });

@@ -13,7 +13,7 @@ class DB:
         return d
 
     def __init__(self, settings):
-        self.conn = sqlite3.connect(settings['PATH'])
+        self.conn = sqlite3.connect(settings['PATH'], check_same_thread=False)
         self.conn.row_factory = self.dictFactory
         self.c = self.conn.cursor()
 
@@ -74,6 +74,11 @@ class DB:
         query = "SELECT * FROM songs WHERE url = :url"
         self.c.execute(query, {'url': url})
         return self.c.fetchone()
+
+    def getAllSongs(self):
+        query = "SELECT * FROM songs"
+        self.c.execute(query)
+        return self.c.fetchall()
 
     def addSong(self, userId, name, url):
         query = "INSERT INTO songs (users_id, name, url) VALUES (:userId, :name, :url)"

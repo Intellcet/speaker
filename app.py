@@ -1,5 +1,6 @@
 from aiohttp import web
 from pygame import mixer
+
 from settings import SETTINGS
 
 from application.mediator import Mediator
@@ -8,6 +9,7 @@ from application.router.router import Router
 from application.modules.managers.songManager import SongManager
 from application.modules.managers.playlistManager import PlaylistManager
 from application.modules.managers.userManager import UserManager
+from application.modules.managers.radioManager import RadioManager
 
 mixer.init()
 music = mixer.music
@@ -18,6 +20,7 @@ db = DB(SETTINGS["DB"])
 SongManager({ "mediator": mediator, "db": db, "pathToMusic": SETTINGS['PATH_TO_MUSIC'], "music": music })
 PlaylistManager({ "mediator": mediator, "db": db, "pathToMusic": SETTINGS['PATH_TO_MUSIC'], "music": music })
 UserManager({ "mediator": mediator, "db": db, "pathToMusic": SETTINGS['PATH_TO_MUSIC'], "music": music })
+RadioManager({ "mediator": mediator, "db": db, "pathToMusic": SETTINGS['PATH_TO_MUSIC'], "music": music })
 
 # test users:
 # vasya <=> 123

@@ -46,6 +46,7 @@ const SETTINGS = {
             READY_FOR_NEXT_SONG: 'READY_FOR_NEXT_SONG',
             PLAY_PREV_SONG: 'PLAY_PREV_SONG',
             PLAY_NEXT_SONG: 'PLAY_NEXT_SONG',
+            UPDATE_RADIO_HISTORY: 'UPDATE_RADIO_HISTORY',
         },
         TRIGGERS: {
             GET_USER: 'GET_USER',
@@ -57,6 +58,8 @@ const SETTINGS = {
             ADD_SONG_TO_FAVORITE: 'ADD_SONG_TO_FAVORITE',
             IS_SONG_LIKED: 'IS_SONG_LIKED',
             GET_SONG: 'GET_SONG',
+            GET_RADIO_HISTORY: 'GET_RADIO_HISTORY',
+            GET_CURRENT_RADIO_SONG: 'GET_CURRENT_RADIO_SONG',
         }
     },
 

@@ -12,10 +12,13 @@ SETTINGS = {
             "REGISTER": "REGISTER",
             "GET_USER_DATA": "GET_USER_DATA",
             "GET_SONGS": "GET_SONGS",
+            "GET_SONG": "GET_SONG",
             "PLAY_SONG": "PLAY_SONG",
             "PAUSE_SONG": "PAUSE_SONG",
             "RESUME_SONG": "RESUME_SONG",
             "STOP_SONG": "STOP_SONG",
+            "SET_NEW_SONG_POSITION": "SET_NEW_SONG_POSITION",
+            "SET_VOLUME": "SET_VOLUME",
             "GET_USER_SONGS": "GET_USER_SONGS",
             "GET_USER_PLAYLISTS": "GET_USER_PLAYLISTS",
             "UPLOAD_SONG": "UPLOAD_SONG",
@@ -26,8 +29,13 @@ SETTINGS = {
             "GET_PLAYLIST": "GET_PLAYLIST",
             "ADD_PLAYLIST": "ADD_PLAYLIST",
             "DELETE_PLAYLIST": "DELETE_PLAYLIST",
+            "GET_RADIO_SONG": "GET_RADIO_SONG",
+            "GET_ALL_SONGS": "GET_ALL_SONGS",
+            "GET_RADIO_HISTORY": "GET_RADIO_HISTORY",
         },
-        "EVENTS": {}
+        "EVENTS": {
+            "THREAD_IS_FINISHED": "THREAD_IS_FINISHED",
+        }
     },
 
     "PATH_TO_MUSIC": "public/music/"

@@ -1,8 +1,6 @@
 function Speaker(options) {
-    options = options instanceof Object ? options : {};
 
-    const $S = options.$SELECTORS;
-    const PAGES = options.PAGES;
+    options = options instanceof Object ? options : {};
 
     const mediator = options.mediator;
     const EVENTS = mediator.EVENTS;
@@ -19,6 +17,7 @@ function Speaker(options) {
     function speakerHandler() {
         uiSpeaker = null;
         uiSpeaker = new UISpeaker(options);
+        mediator.call(EVENTS.FILL_PLAYER);
     }
 
     /**
@@ -45,6 +44,11 @@ function Speaker(options) {
      * @param flag
      */
     async function playSong({id}, flag = true) {
+        const currentSongFromRadio = mediator.get(TRIGGERS.GET_CURRENT_RADIO_SONG);
+        if (currentSongFromRadio) {
+            currentSongFromRadio.pause();
+            currentSongFromRadio.src="";
+        }
         if (flag) {
             currentPlaylist = null;
             currentSong = null;

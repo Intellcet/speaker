@@ -14,7 +14,7 @@ function Player(options) {
     let uiPlayer = null;
 
     function getSong(id) {
-        return server.downloadSong({id});
+        return server.getSong({id});
     }
 
     function setNewSongPosition(data) {

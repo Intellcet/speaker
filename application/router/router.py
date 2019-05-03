@@ -25,8 +25,12 @@ class Router:
             ('GET', '/api/song/pause/{token}/{songId}', self.pauseSong),  # Приостановить песню на колонке
             ('GET', '/api/song/resume/{token}/{songId}', self.resumeSong),  # Возобновить песню на колонке
             ('GET', '/api/song/stop/{token}/{songId}', self.stopSong),  # Остановить песню на колонке
+            ('GET', '/api/song/position/{token}/{songId}/{position}', self.setPositionSong),  # Перемотать песню на колонке
+            ('GET', '/api/song/volume/{token}/{songId}/{volume}', self.setVolume),  # Изменить громкость на колонке
             ('POST', '/api/song/{token}', self.uploadSong),  # Выгрузить песню
-            ('GET', '/api/song/{token}/{songId}', self.downloadSong),  # Воспроизвести песню
+            ('GET', '/api/song/down', self.downloadSong),  # Воспроизвести песню
+            ('GET', '/api/song/get/{token}/{songId}', self.getSong),  # Получить песню
+            ('GET', '/api/song/history', self.getRadioHistory),  # Получить историю с радио
             ('DELETE', '/api/song/{token}/{songId}', self.deleteSong),  # Удалить песню пользователя
             ('GET', '/api/song/playlist/{token}/{songId}/{playlistId}', self.addSongToPlaylist),  # Добавить песню в плейлист
             ('DELETE', '/api/song/playlist/{token}/{songId}/{playlistId}', self.removeSongFromPlaylist),  # Убрать песню из плейлиста
@@ -82,6 +86,14 @@ class Router:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(3005))
 
+    def getSong(self, request):
+        token = request.match_info.get('token')
+        songId = request.match_info.get('songId')
+        answer = self.mediator.get(self.TRIGGERS['GET_SONG'], {'token': token, 'songId': songId})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(9000))
+
     def playSong(self, request):
         token = request.match_info.get('token')
         songId = request.match_info.get('songId')
@@ -114,6 +126,25 @@ class Router:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(5040))
 
+    def setPositionSong(self, request):
+        token = request.match_info.get('token')
+        songId = request.match_info.get('songId')
+        position = request.match_info.get('position')
+        answer = self.mediator.get(self.TRIGGERS['SET_NEW_SONG_POSITION'], {'token': token, 'songId': songId, 'position': position})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(5040))
+
+    def setVolume(self, request):
+        token = request.match_info.get('token')
+        songId = request.match_info.get('songId')
+        volume = request.match_info.get('volume')
+        answer = self.mediator.get(self.TRIGGERS['SET_VOLUME'],
+                                   {'token': token, 'songId': songId, 'volume': volume})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(5040))
+
     async def uploadSong(self, request):
         request._client_max_size = 1024**2 * 15  # 15MB max size
         data = await request.post()
@@ -124,12 +155,16 @@ class Router:
         return self.web.json_response(self.api.error(3010))
 
     def downloadSong(self, request):
-        token = request.match_info.get('token')
-        songId = request.match_info.get('songId')
-        answer = self.mediator.get(self.TRIGGERS['DOWNLOAD_SONG'], { 'token': token, 'songId': songId })
+        answer = self.mediator.get(self.TRIGGERS['DOWNLOAD_SONG'])
         if answer:
             return self.web.json_response(self.api.answer(answer))
         return self.web.json_response(self.api.error(3020))
+
+    def getRadioHistory(self, request):
+        answer = self.mediator.get(self.TRIGGERS['GET_RADIO_HISTORY'])
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(9000))
 
     def deleteSong(self, request):
         token = request.match_info.get('token')

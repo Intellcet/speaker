@@ -23,8 +23,10 @@ function Login(options) {
                 server.token = null;
                 $S.BUTTONS.LOGIN.html('Войти');
                 $S.BUTTONS.REGISTER.show();
+                $S.PAGES.SPEAKER.addClass('speaker-active'); // Открываем доступ к колонке
                 mediator.call(EVENTS.BUTTONS_EVENT_HANDLER);
                 mediator.call(EVENTS.SHOW_RADIO, PAGES.RADIO);
+                mediator.call(EVENTS.USER_UPDATED);
             }
         });
     }
@@ -46,6 +48,7 @@ function Login(options) {
                     $S.PAGES.SPEAKER.removeClass('speaker-active'); // Открываем доступ к колонке
                     logoutHandler();
                     mediator.call(EVENTS.LOGGED_IN, result.data);
+                    mediator.call(EVENTS.USER_UPDATED);
                     setTimeout(() => $S.LOGIN.MSG.empty(), 2000);
                     return;
                 }

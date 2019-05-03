@@ -118,26 +118,26 @@ function UIPlayer(options) {
      * @param song
      */
     function progressBarHandler(song) {
-        $S.PLAYER.MARKER.off('mousedown').on('mousedown', () => {
+        $S.PLAYER.MARKER.off('mousedown touchstart').on('mousedown touchstart', () => {
             clearInterval(timestampIntervalId);
             canMove = true;
         });
-        $S.MAIN_CONTAINER.off('mouseup').on('mouseup', e => setNewPosition(e, song));
-        $S.PLAYER.PLAYER_CONTAINER.off('mouseup').on('mouseup', e => setNewPosition(e, song));
-        $S.PLAYER.MARKER.off('mouseup').on('mouseup', e => setNewPosition(e, song));
-        $S.PLAYER.PLAYER_CONTAINER.off('mousemove').on('mousemove', e => {
+        $S.MAIN_CONTAINER.off('mouseup touchend').on('mouseup touchend', e => setNewPosition((e.originalEvent.changedTouches) ? e.originalEvent.changedTouches[0] : e.originalEvent, song));
+        $S.PLAYER.PLAYER_CONTAINER.off('mouseup touchend').on('mouseup touchend', e => setNewPosition((e.originalEvent.changedTouches) ? e.originalEvent.changedTouches[0] : e.originalEvent, song));
+        $S.PLAYER.MARKER.off('mouseup touchend').on('mouseup touchend', e => setNewPosition((e.originalEvent.changedTouches) ? e.originalEvent.changedTouches[0] : e.originalEvent, song));
+        $S.PLAYER.PLAYER_CONTAINER.off('mousemove touchmove').on('mousemove touchmove', e => {
             if (canMove) {
-                moveMarker(e.originalEvent);
+                moveMarker((e.originalEvent.changedTouches) ? e.originalEvent.changedTouches[0] : e.originalEvent);
             }
         });
-        $S.MAIN_CONTAINER.off('mousemove').on('mousemove', e => {
+        $S.MAIN_CONTAINER.off('mousemove touchmove').on('mousemove touchmove', e => {
             if (canMove) {
-                moveMarker(e.originalEvent);
+                moveMarker((e.originalEvent.changedTouches) ? e.originalEvent.changedTouches[0] : e.originalEvent);
             }
         });
-        $S.PLAYER.PROGRESS_BAR.off('mousemove').on('mousemove', e => {
+        $S.PLAYER.PROGRESS_BAR.off('mousemove touchmove').on('mousemove touchmove', e => {
             if (canMove) {
-                moveMarker(e.originalEvent);
+                moveMarker((e.originalEvent.changedTouches) ? e.originalEvent.changedTouches[0] : e.originalEvent);
             }
         });
     }
@@ -201,14 +201,15 @@ function UIPlayer(options) {
      * Обработчик громкости
      */
     function volumeHandler(song) {
-        $S.PLAYER.VOLUME_MARKER.off('mousedown').on('mousedown', () => changeVolume = true);
-        $S.PLAYER.VOLUME_BAR.off('mouseup').on('mouseup', e => {
+        $S.PLAYER.VOLUME_MARKER.off('mousedown touchstart').on('mousedown touchstart', () => changeVolume = true);
+        $S.PLAYER.VOLUME_BAR.off('mouseup touchend').on('mouseup touchend', e => {
             changeVolume = false;
             mediator.call(EVENTS.SET_VOLUME, {songId: song.id, volume: currentVolume});
         });
-        $S.PLAYER.VOLUME_BAR.off('mousemove').on('mousemove', e => {
+        $S.PLAYER.VOLUME_BAR.off('mousemove touchmove').on('mousemove touchmove', e => {
             if (changeVolume) {
-                moveVolumeMarker(e.originalEvent.clientX - $S.PLAYER.VOLUME_BAR.position().left);
+                const clientX = (e.originalEvent.changedTouches) ? e.originalEvent.changedTouches[0].clientX : e.originalEvent.clientX;
+                moveVolumeMarker(clientX - $S.PLAYER.VOLUME_BAR.position().left);
             }
         });
     }
@@ -246,6 +247,7 @@ function UIPlayer(options) {
      * @param songId
      */
     async function fillPlayer(songId) {
+        fillStartingProgressBar();
         songId = songId - 0;
         if (songId) {
             user = mediator.get(TRIGGERS.GET_USER);

@@ -13,11 +13,15 @@ class SongManager(BaseManager):
     def __init__(self, options):
         super().__init__(options)
         self.mediator.set(self.TRIGGERS['GET_USER_SONGS'], self.getUserSongs)
+        self.mediator.set(self.TRIGGERS['GET_ALL_SONGS'], self.getAllSongs)
         self.mediator.set(self.TRIGGERS['GET_SONGS'], self.getSongs)
+        self.mediator.set(self.TRIGGERS['GET_SONG'], self.getSong)
         self.mediator.set(self.TRIGGERS['PLAY_SONG'], self.playSong)
         self.mediator.set(self.TRIGGERS['PAUSE_SONG'], self.pauseSong)
         self.mediator.set(self.TRIGGERS['RESUME_SONG'], self.resumeSong)
         self.mediator.set(self.TRIGGERS['STOP_SONG'], self.stopSong)
+        self.mediator.set(self.TRIGGERS['SET_NEW_SONG_POSITION'], self.setSongPosition)
+        self.mediator.set(self.TRIGGERS['SET_VOLUME'], self.setVolume)
         self.mediator.set(self.TRIGGERS['UPLOAD_SONG'], self.uploadSong)
         self.mediator.set(self.TRIGGERS['DOWNLOAD_SONG'], self.downloadSong)
         self.mediator.set(self.TRIGGERS['DELETE_SONG'], self.deleteSong)
@@ -37,6 +41,16 @@ class SongManager(BaseManager):
             return answer
         return False
 
+    # Получить все песни
+    # data = {}
+    def getAllSongs(self, data=None):
+        songs = self.db.getAllSongs()
+        answer = list()
+        for song in songs:
+            answer.append(Song({'id': song['id'], 'userId': song['users_id'],
+                                'name': song['name'], 'url': song['url']}))
+        return answer
+
     # Получить все песни с сервера
     # data = { token }
     def getSongs(self, data):
@@ -47,6 +61,21 @@ class SongManager(BaseManager):
             if user:
                 return self.db.getSongs()
         return False
+
+    def getSong(self, data):
+        token = data['token']
+        songId = data['songId']
+        users = self.mediator.get(self.TRIGGERS['GET_USERS'])
+        if token in users.keys():
+            user = users[token]
+            if user:
+                song = self.db.getSongById(songId)
+                if song:
+                    songUrl = song['url']
+                    with open(songUrl, 'rb') as f:  # открываем файл с песней
+                        data = base64.b64encode(bytearray(f.read()))  # кодируем в бинарник
+                        return data.decode('utf-8')  # декодируем в utf-8
+                return False
 
     # Воспроизвести песню с колонки
     # data = { token, songId }
@@ -75,7 +104,9 @@ class SongManager(BaseManager):
         if token in users.keys():
             user = users[token]
             if user:
-                song = Song(self.db.getSongById(songId))
+                s = self.db.getSongById(songId)
+                s['userId'] = s['users_id']  # Костыыыль
+                song = Song(s)
                 if song and self.playingSong and self.playingSong.id == song.id:
                     self.music.pause()
                     return True
@@ -90,7 +121,9 @@ class SongManager(BaseManager):
         if token in users.keys():
             user = users[token]
             if user:
-                song = Song(self.db.getSongById(songId))
+                s = self.db.getSongById(songId)
+                s['userId'] = s['users_id']  # Костыыыль
+                song = Song(s)
                 if song and self.playingSong and self.playingSong.id == song.id:
                     return self.music.unpause()
         return False
@@ -109,6 +142,44 @@ class SongManager(BaseManager):
                     self.music.stop()
                     self.playingSong = None
                     return True
+        return False
+
+    # Перемотать песню с колонки
+    # data = { token, songId }
+    def setSongPosition(self, data):
+        token = data['token']
+        songId = data['songId']
+        position = data['position']
+        users = self.mediator.get(self.TRIGGERS['GET_USERS'])
+        if token in users.keys():
+            user = users[token]
+            if user:
+                song = self.db.getSongById(songId)
+                if song and self.playingSong and self.playingSong.id == song['id']:
+                    if self.music.get_busy():
+                        self.music.rewind()
+                        self.music.set_pos(float(position))
+                        return True
+                    else:
+                        self.music.load('./' + self.playingSong.url)
+                        self.music.play()
+                        self.music.set_pos(float(position))
+                        return True
+        return False
+
+    def setVolume(self, data):
+        token = data['token']
+        songId = data['songId']
+        volume = data['volume']
+        users = self.mediator.get(self.TRIGGERS['GET_USERS'])
+        if token in users.keys():
+            user = users[token]
+            if user:
+                song = self.db.getSongById(songId)
+                if song and self.playingSong and self.playingSong.id == song['id']:
+                    if volume and volume != 'null' and float(volume):
+                        self.music.set_volume(float(volume))
+                        return True
         return False
 
     # Выгрузить песню на сервер
@@ -137,20 +208,16 @@ class SongManager(BaseManager):
         return False
 
     # Выгрузка песни на клиент
-    # data = { token, songId }
+    # data = { songId }
     def downloadSong(self, data):
-        token = data['token']
-        songId = data['songId']
-        users = self.mediator.get(self.TRIGGERS['GET_USERS'])
-        if token in users.keys():
-            user = users[token]
-            if user:
-                song = self.db.getSongById(songId)
-                if song:
-                    songUrl = song['url']
-                    with open(songUrl, 'rb') as f:  # открываем файл с песней
-                        data = base64.b64encode(bytearray(f.read()))  # кодируем в бинарник
-                        return data.decode('utf-8')  # декодируем в utf-8
+        song = self.mediator.get(self.TRIGGERS['GET_RADIO_SONG'])
+        if song:
+            songUrl = song.url
+            answer = {'song': song.get()}
+            with open(songUrl, 'rb') as f:  # открываем файл с песней
+                data = base64.b64encode(bytearray(f.read()))  # кодируем в бинарник
+                answer['data'] = data.decode('utf-8')
+                return answer  # декодируем в utf-8
         return False
 
     # Удалить песню пользователя с сервера

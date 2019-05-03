@@ -60,13 +60,15 @@ function Profile(options) {
     }
 
     async function addSongToFavorite(songId) {
-        const playlist = user.playlists.find(p => p.name === 'favorite');
-        if (playlist) {
-            if (!checkSongInPlaylist(playlist.id, songId)) {
-                return server.addSongToPlaylist({playlistId: playlist.id, songId});
+        if (user) {
+            const playlist = user.playlists.find(p => p.name === 'favorite');
+            if (playlist) {
+                if (!checkSongInPlaylist(playlist.id, songId)) {
+                    return server.addSongToPlaylist({playlistId: playlist.id, songId});
+                }
             }
+            return false;
         }
-        return false;
     }
 
     async function deleteSongFromFavorite(songId) {
@@ -83,15 +85,19 @@ function Profile(options) {
         mediator.call(EVENTS.FILL_SONGS_LIST_PROFILE);
         mediator.call(EVENTS.SELECTED_PLAYLIST_HANDLER);
         mediator.call(EVENTS.SPEAKER_UPDATE);
+        mediator.call(EVENTS.UPDATE_RADIO_HISTORY);
     }
 
     function isSongLiked(songId) {
-        const playlist = user.playlists.find(p => p.name === 'favorite');
-        let song = null;
-        if (playlist) {
-            song = playlist.songs.find(s => s.id === songId);
+        if (user) {
+            const playlist = user.playlists.find(p => p.name === 'favorite');
+            let song = null;
+            if (playlist) {
+                song = playlist.songs.find(s => s.id === songId);
+            }
+            return !!song;
         }
-        return !!song;
+        return false;
     }
 
     function init() {

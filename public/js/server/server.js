@@ -157,16 +157,6 @@ class Server {
         return this.executePost(data)
     }
 
-    /**
-     * Скачать песню с сервера
-     * @param data
-     * @returns {Promise<any>}
-     */
-    downloadSong(data = {}) {
-        data.url = `song/down/${this.token}/${data.id}`;
-        return this.executeGet(data);
-    }
-
     getSongs(data = {}) {
         data.url = `song/get/${this.token}`;
         return this.executeGet(data);
@@ -194,6 +184,26 @@ class Server {
 
     setNewSongPosition(data = {}) {
         data.url = `song/position/${this.token}/${data.songId}/${data.position}`;
+        return this.executeGet(data);
+    }
+
+    getRadioHistory(data = {}) {
+        data.url = `song/history`;
+        return this.executeGet(data);
+    }
+
+    /**
+     * Скачать песню с сервера
+     * @param data
+     * @returns {Promise<any>}
+     */
+    getCurrentSong(data = {}) {
+        data.url = `song/down`;
+        return this.executeGet(data);
+    }
+
+    getSong(data = {}) {
+        data.url = `song/get/${this.token}/${data.id}`;
         return this.executeGet(data);
     }
 

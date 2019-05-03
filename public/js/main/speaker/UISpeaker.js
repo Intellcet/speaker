@@ -3,7 +3,6 @@ function UISpeaker(options) {
     options = options instanceof Object ? options : {};
 
     const $S = options.$SELECTORS;
-    const POPUPS = options.POPUPS;
 
     const mediator = options.mediator;
     const EVENTS = mediator.EVENTS;
@@ -34,16 +33,18 @@ function UISpeaker(options) {
      * @param _songs
      */
     function fillListSongs(_songs) {
-        const songs = (_songs && _songs.length) ?  _songs : user.songs;
-        $S.SPEAKER.SONGS_CONTENT.empty();
-        (_songs) ? $S.SPEAKER.SONGS_CONTENT.addClass('chosen-playlists-songs') : $S.SPEAKER.SONGS_CONTENT.removeClass('chosen-playlists-songs');
-        for (const song of songs) {
-            const row = `<div class="speaker-content-song-row" data-id="${song.id}">
-                            <p class="speaker-content-song-name">${song.name}</p>
-                         </div>`;
-            $S.SPEAKER.SONGS_CONTENT.prepend(row);
+        if (user) {
+            const songs = (_songs && _songs.length) ?  _songs : user.songs;
+            $S.SPEAKER.SONGS_CONTENT.empty();
+            (_songs) ? $S.SPEAKER.SONGS_CONTENT.addClass('chosen-playlists-songs') : $S.SPEAKER.SONGS_CONTENT.removeClass('chosen-playlists-songs');
+            for (const song of songs) {
+                const row = `<div class="speaker-content-song-row" data-id="${song.id}">
+                                <p class="speaker-content-song-name">${song.name}</p>
+                             </div>`;
+                $S.SPEAKER.SONGS_CONTENT.prepend(row);
+            }
+            songsHandler();
         }
-        songsHandler();
     }
 
     /**
@@ -76,14 +77,16 @@ function UISpeaker(options) {
      */
     function fillListPlaylists() {
         $S.SPEAKER.PLAYLIST_CONTENT.empty();
-        for (const playlist of user.playlists) {
-            const row = `<div class="speaker-content-playlist-row" data-id="${playlist.id}">
-                            <p class="speaker-content-playlist-name">${playlist.name}</p>
-                            <p class="speaker-content-playlist-songs">${playlist.songs.length} песен</p>
-                         </div>`;
-            $S.SPEAKER.PLAYLIST_CONTENT.prepend(row);
+        if (user) {
+            for (const playlist of user.playlists) {
+                const row = `<div class="speaker-content-playlist-row" data-id="${playlist.id}">
+                                <p class="speaker-content-playlist-name">${playlist.name}</p>
+                                <p class="speaker-content-playlist-songs">${playlist.songs.length} песен</p>
+                             </div>`;
+                $S.SPEAKER.PLAYLIST_CONTENT.prepend(row);
+            }
+            playlistsHandler();
         }
-        playlistsHandler();
     }
 
     /**
