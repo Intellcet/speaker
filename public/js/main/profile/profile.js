@@ -79,9 +79,10 @@ function Profile(options) {
 
     async function userUpdated() {
         user = (await server.getUser()).data;
-        mediator.call(EVENTS.SELECTED_PLAYLIST_HANDLER);
-        mediator.call(EVENTS.FILL_SONGS_LIST_PROFILE);
         mediator.call(EVENTS.FILL_PLAYLISTS_LIST_PROFILE);
+        mediator.call(EVENTS.FILL_SONGS_LIST_PROFILE);
+        mediator.call(EVENTS.SELECTED_PLAYLIST_HANDLER);
+        mediator.call(EVENTS.SPEAKER_UPDATE);
     }
 
     function isSongLiked(songId) {
@@ -106,7 +107,6 @@ function Profile(options) {
         mediator.set(TRIGGERS.DELETE_SONG_FROM_PLAYLIST, deleteSongFromPlaylist);
         mediator.set(TRIGGERS.DELETE_SONG_FROM_FAVORITE, deleteSongFromFavorite);
         mediator.set(TRIGGERS.IS_SONG_LIKED, isSongLiked);
-
     }
     init();
 

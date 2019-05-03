@@ -46,11 +46,13 @@ function NavigatorUI(options) {
         }
     }
 
+    // Закрыть все popup-ы
     function closePopup() {
         Object.keys($S.POPUPS).forEach(popup => $S.POPUPS[popup].removeClass('selected-elem'));
         $S.POPUPS.WRAP.removeClass('show-popup');
     }
 
+    // Обработчик нажатия на фон popup-a
     function popupWrapHandler() {
         $S.POPUPS.WRAP.off('click').on('click', e => {
             if (e.target === $S.POPUPS.WRAP[0]) {
@@ -64,6 +66,7 @@ function NavigatorUI(options) {
         });
     }
 
+    // Показать popup поверх popup-a
     function popupAppendSongWrapperHandler() {
         $S.POPUPS.APPEND_SONG.off('click').on('click', e => {
             if (e.target === $S.POPUPS.APPEND_SONG[0]) {
@@ -74,6 +77,7 @@ function NavigatorUI(options) {
         })
     }
 
+    // Скрыть все popup-ы
     function hidePopups() {
         $S.POPUPS.LOGIN.removeClass('show-action-popup');
         $S.POPUPS.SELECTED_PLAYLIST.removeClass('show-action-popup');
@@ -82,6 +86,7 @@ function NavigatorUI(options) {
         $S.POPUPS.APPEND_SONG.removeClass('show-action-popup');
     }
 
+    // Показать нужный popup
     function switchPopups(popup, elem=null) {
         switch (popup) {
             case POPUPS.LOGIN_POPUP:
@@ -159,7 +164,6 @@ function NavigatorUI(options) {
         mediator.subscribe(EVENTS.SHOW_RADIO, switchPages);
         mediator.subscribe(EVENTS.SWITCH_POPUPS, switchPopups);
         mediator.subscribe(EVENTS.CLOSE_POPUP, closePopup);
-
     }
     init();
 

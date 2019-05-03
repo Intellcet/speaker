@@ -43,6 +43,7 @@ function Login(options) {
                     $S.LOGIN.MSG.empty().append('Вы успешно авторизовались! Нажмите где-нибудь для закрытия.');
                     $S.LOGIN.LOGIN.val('');
                     $S.LOGIN.PASSWORD.val('');
+                    $S.PAGES.SPEAKER.removeClass('speaker-active'); // Открываем доступ к колонке
                     logoutHandler();
                     mediator.call(EVENTS.LOGGED_IN, result.data);
                     setTimeout(() => $S.LOGIN.MSG.empty(), 2000);

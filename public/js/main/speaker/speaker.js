@@ -1,7 +1,7 @@
 function Speaker(options) {
     options = options instanceof Object ? options : {};
 
-    const $SELECTORS = options.$SELECTORS;
+    const $S = options.$SELECTORS;
     const PAGES = options.PAGES;
 
     const mediator = options.mediator;
@@ -10,42 +10,98 @@ function Speaker(options) {
 
     const server = options.server;
 
-    function buttonsHandler() {
-        $('.playBtn').off('click').on('click', function (e) {
-            const id = this.dataset.id;
-            if (id) {
-                server.playSong({id});
-            }
-        });
-        $('.stopBtn').off('click').on('click', function (e) {
-            const id = this.dataset.id;
-            if (id) {
-                server.stopSong({id});
-            }
-        });
+    let uiSpeaker = null;
+
+    let user = null;
+    let currentPlaylist = null;
+    let currentSong = null;
+
+    function speakerHandler() {
+        uiSpeaker = null;
+        uiSpeaker = new UISpeaker(options);
     }
 
-    function createListElems(songs) {
-        let str = '';
-        for (let song of songs) {
-            str += `<li class="speaker-list-elem"><span class="song-name">${song.name}</span>` +
-                    `<button class="playBtn" data-id="${song.id}">Play</button>` +
-                    `<button class="stopBtn" data-id="${song.id}">Stop</button></li>`
+    /**
+     * Воспроизвести плейлист начиная с выбранной песни
+     * @param playlistId
+     * @param songId
+     */
+    async function playPlaylistFromSong({playlistId, songId}) {
+        user = mediator.get(TRIGGERS.GET_USER);
+        currentPlaylist = user.playlists.find(p => p.id === playlistId);
+        currentPlaylist.songs.reverse();
+        if (currentPlaylist) {
+            currentSong = currentPlaylist.songs.find(s => s.id === (songId - 0));
+            console.log(currentSong);
+            if (currentSong) {
+                playSong({id: currentSong.id}, false);
+            }
         }
-        return str;
     }
 
-    async function fillList() {
-        const result = await server.getSongs();
-        if (!result.error) {
-            const list = $('.speaker-list');
-            list.empty().append(createListElems(result.data));
-            buttonsHandler();
+    /**
+     * Воспроизвести выбранную песню
+     * @param songId
+     * @param flag
+     */
+    async function playSong({id}, flag = true) {
+        if (flag) {
+            currentPlaylist = null;
+            currentSong = null;
+        }
+        const result = await server.playSong({id});
+        if (result && !result.error) {
+            mediator.call(EVENTS.FILL_PLAYER, id);
+        }
+    }
+
+    function playPrevSong() {
+        if (currentPlaylist) {
+            for (let i = 0; i < currentPlaylist.songs.length; i++) {
+                const song = currentPlaylist.songs[i];
+                if (song.id === currentSong.id) {
+                    let newSong = currentPlaylist.songs[i - 1];
+                    if (newSong) {
+                        playSong({id: newSong.id}, false).finally();
+                        currentSong = newSong;
+                    } else {
+                        newSong = currentPlaylist.songs[currentPlaylist.songs.length - 1];
+                        playSong({id: newSong.id}, false).finally();
+                        currentSong = newSong;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    function playNextSong() {
+        if (currentPlaylist) {
+            for (let i = 0; i < currentPlaylist.songs.length; i++) {
+                const song = currentPlaylist.songs[i];
+                if (song.id === currentSong.id) {
+                    let newSong = currentPlaylist.songs[i + 1];
+                    if (newSong) {
+                        playSong({id: newSong.id}, false).finally();
+                        currentSong = newSong;
+                    } else {
+                        newSong = currentPlaylist.songs[0];
+                        playSong({id: newSong.id}, false).finally();
+                        currentSong = newSong;
+                    }
+                    break;
+                }
+            }
         }
     }
 
     function init() {
-        fillList();
+        mediator.subscribe(EVENTS.SPEAKER_HANDLER, speakerHandler);
+        mediator.subscribe(EVENTS.PLAY_PLAYLIST_FROM_SONG, playPlaylistFromSong);
+        mediator.subscribe(EVENTS.PLAY_SONG, playSong);
+        mediator.subscribe(EVENTS.PLAY_PREV_SONG, playPrevSong);
+        mediator.subscribe(EVENTS.PLAY_NEXT_SONG, playNextSong);
+
     }
     init();
 

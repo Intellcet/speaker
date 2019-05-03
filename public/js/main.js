@@ -1,6 +1,7 @@
 $(document).ready(() => {
 
     const $SELECTORS = {
+        MAIN_CONTAINER: $('.container'),
         PAGES: {
             PROFILE: $('.profile'),
             RADIO: $('.radio'),
@@ -38,6 +39,26 @@ $(document).ready(() => {
             SONGS_CONTENT: $('.profile-content-song-content'),
             PLAYLIST_CONTENT: $('.profile-content-playlist-content'),
         },
+        SPEAKER: {
+            PLAYLIST_CONTENT: $('.speaker-content-playlist'),
+            SONGS_CONTENT: $('.speaker-content-song'),
+        },
+        PLAYER: {
+            PROGRESS_BAR: $('.progress-bar'),
+            PROGRESS: $('.progress'),
+            MARKER: $('.marker'),
+            TIMESTAMP: $('.timestamp'),
+            SONG_NAME: $('.playing-song-name'),
+            PERFORMER: $('.playing-song-performer'),
+            LIKE: $('.like-playing-song-svg'),
+            PREV_SONG: $('.prev-song-svg'),
+            NEXT_SONG: $('.next-song-svg'),
+            MAIN_BTN: $('.main-btn-svg'),
+            VOLUME: $('.volume'),
+            VOLUME_MARKER: $('.volume-marker'),
+            VOLUME_BAR: $('.volume-bar'),
+            PLAYER_CONTAINER: $('.player-container'),
+        },
     };
 
     const mediator = new Mediator({...SETTINGS.MEDIATOR});
@@ -46,7 +67,10 @@ $(document).ready(() => {
 
     new Login({$SELECTORS, server, ...SETTINGS, mediator});
     new Register({$SELECTORS, server, ...SETTINGS, mediator});
+
+    new Player({$SELECTORS, server, ...SETTINGS, mediator});
+
     new Profile({$SELECTORS, server, ...SETTINGS, mediator});
-    // new UI({$SELECTORS, server, ...SETTINGS, mediator});
+    new Speaker({$SELECTORS, server, ...SETTINGS, mediator});
 
 });
