@@ -46,6 +46,11 @@ function NavigatorUI(options) {
         }
     }
 
+    function closePopup() {
+        Object.keys($S.POPUPS).forEach(popup => $S.POPUPS[popup].removeClass('selected-elem'));
+        $S.POPUPS.WRAP.removeClass('show-popup');
+    }
+
     function popupWrapHandler() {
         $S.POPUPS.WRAP.off('click').on('click', e => {
             if (e.target === $S.POPUPS.WRAP[0]) {
@@ -54,8 +59,7 @@ function NavigatorUI(options) {
                     $S.BUTTONS.REGISTER.hide();
                     $S.BUTTONS.LOGIN.html('Выйти');
                 }
-                Object.keys($S.POPUPS).forEach(popup => $S.POPUPS[popup].removeClass('selected-elem'));
-                $S.POPUPS.WRAP.removeClass('show-popup');
+                closePopup();
             }
         });
     }
@@ -154,6 +158,8 @@ function NavigatorUI(options) {
         mediator.subscribe(EVENTS.BUTTONS_EVENT_HANDLER, buttonsEventHandler);
         mediator.subscribe(EVENTS.SHOW_RADIO, switchPages);
         mediator.subscribe(EVENTS.SWITCH_POPUPS, switchPopups);
+        mediator.subscribe(EVENTS.CLOSE_POPUP, closePopup);
+
     }
     init();
 

@@ -18,6 +18,7 @@ class UserManager(BaseManager):
         self.mediator.set(self.TRIGGERS['LOGIN'], self.login)
         self.mediator.set(self.TRIGGERS['LOGOUT'], self.logout)
         self.mediator.set(self.TRIGGERS['REGISTER'], self.register)
+        self.mediator.set(self.TRIGGERS['GET_USER_DATA'], self.getUserData)
 
     # Метод, проверяющий данные на валидность
     @staticmethod
@@ -33,7 +34,7 @@ class UserManager(BaseManager):
                 return True
         return False
 
-    def getUsers(self, data):
+    def getUsers(self, data=None):
         return self.users
 
     def __getUserData(self, user):
@@ -44,6 +45,15 @@ class UserManager(BaseManager):
         self.users.update({ user.token: user })
         user.password = None
         return user.get()
+
+    # Получить данные пользователя
+    # data = { token }
+    def getUserData(self, data):
+        token = data['token']
+        if token in self.users.keys():
+            user = self.users[token]
+            return self.__getUserData(user.get())
+        return None
 
     # Войти в систему
     # data = { login, password, rnd }

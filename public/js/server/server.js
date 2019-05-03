@@ -51,6 +51,23 @@ class Server {
     }
 
     /**
+     * Метод, выполняющий любой DELETE-запрос на сервер
+     * @param data данные, с которыми нужно выполнить этот запрос
+     * @returns {Promise<any>} результат выполнения запроса
+     */
+    executeDelete(data) {
+        return new Promise(resolve => {
+            $.ajax({
+                url: this.url + data.url,
+                data,
+                method: 'DELETE',
+                dataType: 'json',
+                success: data => resolve(data)
+            })
+        });
+    }
+
+    /**
      * Метод отправки запроса login на сервер
      * @param data данные с которыми нужно отправить запрос
      * @returns {Promise<any>} результат запроса
@@ -80,12 +97,54 @@ class Server {
         return this.executePost(data);
     }
 
+    /**
+     * Метод для получения обновленных данных пользователя с сервера
+     * @param data = {}
+     * @returns {Promise<any>}
+     */
     getUser(data = {}) {
-
+        data.url = `user/${this.token}`;
+        return this.executeGet(data);
     }
 
+    /**
+     * Метод для добавления песни в плейлист
+     * @param data
+     * @returns {Promise<any>}
+     */
     addSongToPlaylist(data = {}) {
+        data.url = `song/playlist/${this.token}/${data.songId}/${data.playlistId}`;
+        return this.executeGet(data);
+    }
 
+    /**
+     * Метод для добавления нового плейлиста
+     * @param data = {name}
+     * @returns {Promise<any>}
+     */
+    addNewPlaylist(data = {}) {
+        data.url = `playlist/add/${this.token}/${data.name}`;
+        return this.executeGet(data);
+    }
+
+    /**
+     * Метод для удаления плейлиста
+     * @param data = {id}
+     * @returns {Promise<any>}
+     */
+    deletePlaylist(data = {}) {
+        data.url = `playlist/${this.token}/${data.id}`;
+        return this.executeDelete(data);
+    }
+
+    /**
+     * Метод для удаления песни из плейлиста
+     * @param data = {songId, playlistId}
+     * @returns {Promise<any>}
+     */
+    deleteSongFromPlaylist(data = {}) {
+        data.url = `song/playlist/${this.token}/${data.songId}/${data.playlistId}`;
+        return this.executeDelete(data);
     }
 
     /**

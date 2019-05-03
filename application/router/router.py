@@ -18,6 +18,7 @@ class Router:
             ('GET', '/api/user/login/{login}/{password}/{rnd}', self.login),
             ('GET', '/api/user/logout/{token}', self.logout),
             ('POST', '/api/user', self.register),
+            ('GET', '/api/user/{token}', self.getUser),
             # методы апи о песнях
             ('GET', '/api/song/get/{token}', self.getSongs),  # Получить список песен
             ('GET', '/api/song/{token}/{songId}', self.playSong),  # Воспроизвести песню на колонке
@@ -43,6 +44,13 @@ class Router:
 
     def staticHandler(self, request):
         return self.web.FileResponse('./public/index.html')
+
+    def getUser(self, request):
+        token = request.match_info.get('token')
+        answer = self.mediator.get(self.TRIGGERS['GET_USER_DATA'], {'token': token})
+        if answer:
+            return self.web.json_response(self.api.answer(answer))
+        return self.web.json_response(self.api.error(2010))
 
     def login(self, request):
         login = request.match_info.get('login')

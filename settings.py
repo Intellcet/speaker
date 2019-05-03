@@ -10,6 +10,7 @@ SETTINGS = {
             "LOGIN": "LOGIN",
             "LOGOUT": "LOGOUT",
             "REGISTER": "REGISTER",
+            "GET_USER_DATA": "GET_USER_DATA",
             "GET_SONGS": "GET_SONGS",
             "PLAY_SONG": "PLAY_SONG",
             "PAUSE_SONG": "PAUSE_SONG",

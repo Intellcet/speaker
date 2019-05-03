@@ -3,7 +3,6 @@ function UIProfile(options) {
     options = options instanceof Object ? options : {};
 
     const $S = options.$SELECTORS;
-    const PAGES = options.PAGES;
     const POPUPS = options.POPUPS;
 
     const mediator = options.mediator;
@@ -14,13 +13,45 @@ function UIProfile(options) {
     let selectedPlaylist = null;
 
     /**
-     * Обработчик события добавить песню в плейлист*/
-    function addSongToPlaylistHandler() {
+     * Обработчик события лайка
+     * @returns {Promise<void>}
+     */
+    async function likeHandler() {
+        const isLiked = this.dataset.liked;
+        const songId = $(this).parent('div').data('id');
+        if (isLiked === 'false') {
+            //Добавить в список избранных, закрасить сердечко, изменить дата-атрибут
+            const result = await mediator.get(TRIGGERS.ADD_SONG_TO_FAVORITE, songId);
+            if (result && !result.error) {
+                $($(this).children('path')[2]).css('fill', '#5ab3b8');
+                this.dataset.liked = true;
+                mediator.call(EVENTS.USER_UPDATED);
+            }
+        } else {
+            //Удалить из список избранных, закрасить сердечко белым, изменить дата-атрибут
+            const result = await mediator.get(TRIGGERS.DELETE_SONG_FROM_FAVORITE, songId);
+            if (result && !result.error) {
+                $($(this).children('path')[2]).css('fill', '#fff');
+                this.dataset.liked = false;
+                mediator.call(EVENTS.USER_UPDATED);
+            }
+        }
+    }
+
+    /**
+     * Обработчик события добавить песню в плейлист из контекстного меню в разделе песни
+     * */
+    function addSongToPlaylistHandler(elem) {
+        //элемент контекстного меню
         $('.sub-menu-playlist-name').off('click').on('click', async function (e) {
             const playlistId = $(this).data('id');
-            const songId = $($(this)[0].parentElement).parent('div').data('id');
+            const songId = $(elem[0]).parent('div').data('id');
             if (playlistId && songId) {
-                mediator.call(EVENTS.ADD_SONG_TO_PLAYLIST, {playlistId, songId});
+                const result = await mediator.get(TRIGGERS.ADD_SONG_TO_PLAYLIST, {playlistId, songId});
+                if (result && !result.error) {
+                    mediator.call(EVENTS.USER_UPDATED);
+                    fillSubMenu(elem);
+                }
             }
         });
     }
@@ -34,13 +65,9 @@ function UIProfile(options) {
                 const row = `<p class="sub-menu-playlist-name" data-id="${playlist.id}">${playlist.name}</p>`;
                 elem.append(row);
             }
-            addSongToPlaylistHandler();
+            addSongToPlaylistHandler(elem);
         }
     }
-    /**
-     * Добавить в ...
-     * <p class="sub-menu-playlist-name">Первый плейлист</p>
-     * */
 
     /**Обработчик показывания/скрытия кнтекстного меню**/
     function subMenuHandler(flag, elem) {
@@ -55,16 +82,21 @@ function UIProfile(options) {
         }
     }
 
+    /**
+     * Обработчик событий добавления новой песни
+     */
     function addSongHandler() {
+        //загрузить новую песню
         $('.upload-song-btn').off('click').on('click', async function (e) {
-            let file = $('.upload-song')[0].files[0];
+            const file = $('.upload-song')[0];
             const msg = $('.upload-song-error');
-            if (file.type === 'audio/mp3') {
-                file = new FormData();
-                file.append('file', $('#upload-song-value')[0].files[0]);
-                const result = await mediator.get(TRIGGERS.UPLOAD_SONG, file);
+            if (file && file.files[0].type === 'audio/mp3') {
+                const fileSend = new FormData();
+                fileSend.append('file', file.files[0]);
+                const result = await mediator.get(TRIGGERS.UPLOAD_SONG, fileSend);
                 if (!result.error) {
                     msg.empty().append('Песня успешно загружена!');
+                    mediator.call(EVENTS.USER_UPDATED);
                     setTimeout(() => msg.empty(), 2000);
                     return;
                 }
@@ -79,6 +111,7 @@ function UIProfile(options) {
 
     /**Обработчик событий, связанных с песнями**/
     function songsEventHandler() {
+        // Добавить песню в плейлист
         $('.profile-content-song-row').off('mouseenter mouseleave').on('mouseenter', function(e) {
             $($(this).children('div')[0]).addClass('shown-options');
             subMenuHandler(true, this);
@@ -86,13 +119,16 @@ function UIProfile(options) {
             $($(this).children('div')[0]).removeClass('shown-options');
             subMenuHandler(false, this);
         });
+        // Добавить новую песню
         $('.add-song-btn').off('click').on('click', function (e) {
             mediator.call(EVENTS.SWITCH_POPUPS, POPUPS.ADD_SONG);
             addSongHandler();
         });
+        // Отметить песню лайком
+        $('.profile-content-song-like').off('click').on('click', likeHandler);
     }
 
-    /**Заполнить список песнями**/
+    /**Заполнить список песнями ГЛАВНАЯ ФУНКЦИЯ ДЛЯ ПЕСЕН**/
     function fillSongs() {
         user = mediator.get(TRIGGERS.GET_USER);
         if (user) {
@@ -105,10 +141,10 @@ function UIProfile(options) {
                                      <div class="options"><div></div><div></div><div></div></div>
                                  </div>
                                  <svg version="1.1" class="profile-content-song-like content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                      width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
+                                      width="0" height="0" viewBox="0 0 100 100" xml:space="preserve" data-liked="${mediator.get(TRIGGERS.IS_SONG_LIKED, song.id)}">
                                      <path class="like-svg" d="M94.5,35.5"></path>
                                      <path class="like-svg" d="M118.5,38.5"></path>
-                                     <path class="like-svg" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
+                                     <path class="like-svg" style="${(mediator.get(TRIGGERS.IS_SONG_LIKED, song.id)) ? "fill: #5ab3b8" : "fill: #fff"}" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
                                          c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
                                          c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
                                          c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
@@ -123,37 +159,30 @@ function UIProfile(options) {
             songsEventHandler();
         }
     }
-    /**
-     * <div class="profile-content-song-row">
-            <p class="profile-content-song-name">Название песни</p>
-            <div class="options-container"> <!-- shown-options -->
-                <div class="options"><div></div><div></div><div></div></div>
-            </div>
-            <svg version="1.1" class="profile-content-song-like content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                 width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
-                <path class="like-svg" d="M94.5,35.5"></path>
-                <path class="like-svg" d="M118.5,38.5"></path>
-                <path class="like-svg" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
-                    c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
-                    c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
-                    c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
-            </svg>
-        </div>
-     */
 
+    /**
+     * Обработчик события удаления песни из плейлиста
+     */
     function deleteSongsHandler() {
+        //удалить песню из плейлиста
         $('.selected-playlist-content-row-delete-btn').off('click').on('click', async function (e) {
             const songElem = this.parentElement;
             const songId = songElem.dataset.id;
             if (songId) {
-                const result = await mediator.get(TRIGGERS.DELETE_SONG_FROM_PLAYLIST, songId);
+                const result = await mediator.get(TRIGGERS.DELETE_SONG_FROM_PLAYLIST, {songId, playlistId: selectedPlaylist.id});
                 if (!result.error) {
                     songElem.remove();
+                    mediator.call(EVENTS.USER_UPDATED);
+                    fillSelectedPlaylist();
                 }
             }
         });
     }
 
+    /**
+     * Функция для отображения списка песен, которые можно добавить в плейлист
+     * @param container
+     */
     function listSongsHandler(container) {
         container.empty();
         for (const song of user.songs) {
@@ -163,7 +192,8 @@ function UIProfile(options) {
                         </div>`;
             container.prepend(row);
         }
-        $('.add-song-list-row').off('click').on('click', function (e) {
+        //элемент списка
+        $('.add-song-list-row').off('click').on('click', function () {
             const songName = this.firstChild.nextElementSibling.innerHTML;
             const songId = this.dataset.id;
             container.hide();
@@ -174,34 +204,52 @@ function UIProfile(options) {
         });
     }
 
+    /**
+     * Функция для отображения контекстного окна для добавления песни в плейлист
+     */
     function appendSongHandler() {
+        //кнопка выбора песни
         $('.add-song-popup-chose-btn').off('click').on('click', e => {
             $('.pre-add').hide();
             const container = $('.add-song-popup-list-container');
             container.show();
             listSongsHandler(container);
         });
-        $('.add-song-popup-add-btn').off('click').on('click', e => {
+        //кнопка добавления песни
+        $('.add-song-popup-add-btn').off('click').on('click', async e => {
             const songId = $('.add-song-popup-song-name').data('id');
             if (songId) {
-                mediator.call(EVENTS.ADD_SONG_TO_PLAYLIST, {playlistId: selectedPlaylist.id, songId});
+                const result = await mediator.get(TRIGGERS.ADD_SONG_TO_PLAYLIST, {playlistId: selectedPlaylist.id, songId});
+                const msg = $('.add-song-popup-add-error');
+                if (result && !result.error) {
+                    msg.empty().append('Песня добавлена в плейлист!');
+                    mediator.call(EVENTS.USER_UPDATED);
+                    setTimeout(() => msg.empty(), 2000);
+                    return;
+                }
+                msg.empty().append('Ошибка при добавлении песни в плейлист!');
+                setTimeout(() => msg.empty(), 2000);
             }
         })
     }
 
+    /**
+     * Функция для заполнения выбранного плейлиста
+     */
     function fillSelectedPlaylist() {
         const content = $('.selected-playlist-content-content');
         content.empty();
+        selectedPlaylist = mediator.get(TRIGGERS.GET_USER).playlists.find(p => p.id === selectedPlaylist.id);
         for (const song of selectedPlaylist.songs) {
             const row = `<div class="selected-playlist-content-row" data-id="${song.id}">
                             <div class="selected-playlist-info-row">
                                 <p class="selected-playlist-content-row-elem selected-playlist-content-row-name">${song.name}</p>
                     <!--        <p class="selected-playlist-content-row-elem selected-playlist-content-row-time">3:23</p>-->
                                 <svg version="1.1" class="selected-playlist-content-row-elem selected-playlist-content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                 width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
+                                 width="0" height="0" viewBox="0 0 100 100" xml:space="preserve" data-liked="${mediator.get(TRIGGERS.IS_SONG_LIKED, song.id)}>
                                     <path class="like-svg" d="M94.5,35.5"></path>
                                     <path class="like-svg" d="M118.5,38.5"></path>
-                                    <path class="like-svg" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
+                                    <path class="like-svg" style="${(mediator.get(TRIGGERS.IS_SONG_LIKED, song.id)) ? "fill: #5ab3b8" : "fill: #fff"}" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
                                         c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
                                         c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
                                         c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
@@ -211,10 +259,16 @@ function UIProfile(options) {
                         </div>`;
             content.prepend(row);
         }
+        //лайк
+        $('.selected-playlist-content-row-like').off('click').on('click', likeHandler);
         deleteSongsHandler();
+        //удалить плейлист
         $('.selected-playlist-delete-btn').off('click').on('click', function (e) {
             mediator.call(EVENTS.DELETE_PLAYLIST, selectedPlaylist.id);
+            mediator.call(EVENTS.USER_UPDATED);
+            mediator.call(EVENTS.CLOSE_POPUP);
         });
+        //добавить песню
         $('.selected-playlist-add-song-btn').off('click').on('click', function (e) {
             mediator.call(EVENTS.SWITCH_POPUPS, POPUPS.APPEND_SONG);
             appendSongHandler();
@@ -222,24 +276,8 @@ function UIProfile(options) {
     }
 
     /**
-    <div class="selected-playlist-content-row">
-        <div class="selected-playlist-info-row">
-            <p class="selected-playlist-content-row-elem selected-playlist-content-row-name">Название песни</p>
-<!--        <p class="selected-playlist-content-row-elem selected-playlist-content-row-time">3:23</p>-->
-            <svg version="1.1" class="selected-playlist-content-row-elem selected-playlist-content-row-like" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-             width="0" height="0" viewBox="0 0 100 100" xml:space="preserve">
-                <path class="like-svg" d="M94.5,35.5"></path>
-                <path class="like-svg" d="M118.5,38.5"></path>
-                <path class="like-svg" d="M92,17.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.1-0.1-0.2-0.2-0.2-0.2c0,0,0,0,0,0C87.1,12.6,81.2,10,74.7,10
-                    c-13.4,0-24.3,10.9-24.3,24.3c0,0.2,0,0.5,0,0.7l0,0l0,0c0-0.2,0-0.4,0-0.7C50.5,20.9,39.6,10,26.2,10c-6.5,0-12.4,2.6-16.8,6.7
-                    c0,0,0,0,0,0c-0.1,0.1-0.2,0.2-0.2,0.2c-0.1,0.1-0.2,0.2-0.3,0.3C-19.5,44.8,43.8,90,50,94.3c0.1,0,0.2,0,0.4,0c0,0,0.1,0,0.1,0
-                    c0.2,0,0.3,0,0.5,0C57,90.1,120.4,44.8,92,17.2z"></path>
-            </svg>
-        </div>
-        <button class="selected-playlist-content-row-elem selected-playlist-content-row-delete-btn">X</button>
-    </div>
-    */
-
+     * Функция для выбора плейлиста
+     */
     function selectedPlaylistHandler() {
         if (selectedPlaylist) {
             $('.selected-playlist-name').empty().append(selectedPlaylist.name);
@@ -247,15 +285,20 @@ function UIProfile(options) {
         }
     }
 
+    /**
+     * Функция для добавления нового плейлиста
+     */
     function addPlaylistHandler() {
-        $('.add-new-playlist-btn').off('click').on('click', async e => {
+        //добавить плейлист
+        $('.add-new-playlist-btn').off('click').on('click', async () => {
             const playlistName = $('.playlist-name');
             const name = playlistName.val();
             const msg = $('.add-playlist-error');
             if (name) {
-                const result = await mediator.subscribe(TRIGGERS.ADD_NEW_PLAYLIST, name);
+                const result = await mediator.get(TRIGGERS.ADD_NEW_PLAYLIST, name);
                 if (!result.error) {
                     msg.empty().append("Плейлист успешно добавлен! Нажмите куда-нибудь для продолжения.");
+                    mediator.call(EVENTS.USER_UPDATED);
                     setTimeout(() => { playlistName.val(''); msg.empty(); }, 2000);
                     return;
                 }
@@ -268,19 +311,25 @@ function UIProfile(options) {
         })
     }
 
+    /**
+     * Функция для обработки событий связанных с плейлистами
+     */
     function playlistsEventHandler() {
-        $('.profile-content-playlist-row').off('click').on('click', function (e) {
+        //Выбор плейлиста
+        $('.profile-content-playlist-row').off('click').on('click', function () {
             const selectedPlaylistId = $(this).data('id');
+            user = mediator.get(TRIGGERS.GET_USER);
             selectedPlaylist = user.playlists.find(p => p.id === selectedPlaylistId);
             mediator.call(EVENTS.SWITCH_POPUPS, POPUPS.SELECTED_PLAYLIST);
         });
+        //добавить плейлист
         $('.add-playlist-btn').off('click').on('click', e => {
             mediator.call(EVENTS.SWITCH_POPUPS, POPUPS.ADD_PLAYLIST);
             addPlaylistHandler();
         });
     }
 
-    /**Заполнить список плейлистами**/
+    /**Заполнить список плейлистами ГЛАВНАЯ ФУНКЦИЯ ДЛЯ ПЛЕЙЛИСТОВ**/
     function fillPlaylists() {
         user = mediator.get(TRIGGERS.GET_USER);
         if (user) {
@@ -330,6 +379,8 @@ function UIProfile(options) {
         profileUIHandler();
         fillSongs();
         mediator.subscribe(EVENTS.SELECTED_PLAYLIST_HANDLER, selectedPlaylistHandler);
+        mediator.subscribe(EVENTS.FILL_SONGS_LIST_PROFILE, fillSongs);
+        mediator.subscribe(EVENTS.FILL_PLAYLISTS_LIST_PROFILE, fillPlaylists);
     }
     init();
 

@@ -116,7 +116,7 @@ class SongManager(BaseManager):
     def uploadSong(self, data):
         song = data['file']
         token = data['token']
-        if song.content_type == 'audio/mpeg' or song.content_type == 'audio/mp3':
+        if song.content_type and (song.content_type == 'audio/mpeg' or song.content_type == 'audio/mp3'):
             filename = song.filename
             iofile = song.file
             content = iofile.read()
