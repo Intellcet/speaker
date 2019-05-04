@@ -2,9 +2,6 @@ function Player(options) {
 
     options = options instanceof Object ? options : {};
 
-    const $S = options.$SELECTORS;
-    const PAGES = options.PAGES;
-
     const mediator = options.mediator;
     const EVENTS = mediator.EVENTS;
     const TRIGGERS = mediator.TRIGGERS;

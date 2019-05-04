@@ -8,8 +8,6 @@ function UIRadio(options) {
     const EVENTS = mediator.EVENTS;
     const TRIGGERS = mediator.TRIGGERS;
 
-    let user = null;
-
     function disablePlayerButtons() {
         $S.PLAYER.NEXT_SONG.off('click');
         $S.PLAYER.PREV_SONG.off('click');
@@ -67,7 +65,8 @@ function UIRadio(options) {
     function init() {
         disablePlayerButtons();
         fillRadioHistory();
-        mediator.subscribe(EVENTS.UPDATE_RADIO_HISTORY, fillRadioHistory)
+        mediator.subscribe(EVENTS.UPDATE_RADIO_HISTORY, fillRadioHistory);
+        mediator.call(EVENTS.PLAY_RADIO)
     }
     init();
 

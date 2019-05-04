@@ -47,6 +47,10 @@ const SETTINGS = {
             PLAY_PREV_SONG: 'PLAY_PREV_SONG',
             PLAY_NEXT_SONG: 'PLAY_NEXT_SONG',
             UPDATE_RADIO_HISTORY: 'UPDATE_RADIO_HISTORY',
+            CLOSED_RADIO: 'CLOSED_RADIO',
+            CLOSED_SPEAKER: 'CLOSED_SPEAKER',
+            RESET_PLAYER: 'RESET_PLAYER',
+            PLAY_RADIO: 'PLAY_RADIO',
         },
         TRIGGERS: {
             GET_USER: 'GET_USER',

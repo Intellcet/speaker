@@ -14,10 +14,13 @@ function Speaker(options) {
     let currentPlaylist = null;
     let currentSong = null;
 
+    let playingSongId = null;
+
     function speakerHandler() {
         uiSpeaker = null;
         uiSpeaker = new UISpeaker(options);
         mediator.call(EVENTS.FILL_PLAYER);
+        mediator.call(EVENTS.CLOSED_RADIO);
     }
 
     /**
@@ -27,13 +30,15 @@ function Speaker(options) {
      */
     async function playPlaylistFromSong({playlistId, songId}) {
         user = mediator.get(TRIGGERS.GET_USER);
-        currentPlaylist = user.playlists.find(p => p.id === playlistId);
-        currentPlaylist.songs.reverse();
-        if (currentPlaylist) {
-            currentSong = currentPlaylist.songs.find(s => s.id === (songId - 0));
-            console.log(currentSong);
-            if (currentSong) {
-                playSong({id: currentSong.id}, false);
+        if (user) {
+            currentPlaylist = user.playlists.find(p => p.id === playlistId);
+            currentPlaylist.songs.reverse();
+            if (currentPlaylist) {
+                currentSong = currentPlaylist.songs.find(s => s.id === (songId - 0));
+                if (currentSong) {
+                    playingSongId = currentSong.id;
+                    playSong({id: currentSong.id}, false);
+                }
             }
         }
     }
@@ -55,6 +60,7 @@ function Speaker(options) {
         }
         const result = await server.playSong({id});
         if (result && !result.error) {
+            playingSongId = id;
             mediator.call(EVENTS.FILL_PLAYER, id);
         }
     }
@@ -70,6 +76,7 @@ function Speaker(options) {
                         currentSong = newSong;
                     } else {
                         newSong = currentPlaylist.songs[currentPlaylist.songs.length - 1];
+                        playingSongId = newSong.id;
                         playSong({id: newSong.id}, false).finally();
                         currentSong = newSong;
                     }
@@ -90,6 +97,7 @@ function Speaker(options) {
                         currentSong = newSong;
                     } else {
                         newSong = currentPlaylist.songs[0];
+                        playingSongId = newSong.id;
                         playSong({id: newSong.id}, false).finally();
                         currentSong = newSong;
                     }
@@ -99,8 +107,22 @@ function Speaker(options) {
         }
     }
 
+    async function closeSpeaker() {
+        if (currentPlaylist) {
+            currentPlaylist = null;
+        }
+        if (currentSong) {
+            currentSong = null;
+        }
+        const result = await server.stopSong({songId: playingSongId});
+        if (result && !result.error) {
+            mediator.call(EVENTS.RESET_PLAYER);
+        }
+    }
+
     function init() {
         mediator.subscribe(EVENTS.SPEAKER_HANDLER, speakerHandler);
+        mediator.subscribe(EVENTS.CLOSED_SPEAKER, closeSpeaker);
         mediator.subscribe(EVENTS.PLAY_PLAYLIST_FROM_SONG, playPlaylistFromSong);
         mediator.subscribe(EVENTS.PLAY_SONG, playSong);
         mediator.subscribe(EVENTS.PLAY_PREV_SONG, playPrevSong);

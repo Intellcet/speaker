@@ -177,6 +177,11 @@ class Server {
         return this.executeGet(data);
     }
 
+    stopSong(data = {}) {
+        data.url = `song/stop/${this.token}/${data.songId}`;
+        return this.executeGet(data);
+    }
+
     setVolume(data = {}) {
         data.url = `song/volume/${this.token}/${data.songId}/${data.volume}`;
         return this.executeGet(data);
